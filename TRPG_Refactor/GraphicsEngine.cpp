@@ -39,10 +39,12 @@ AssetManager::AssetManager() { areTexturesLoaded = false; }
 
 AssetManager::~AssetManager() {
 	if (areTexturesLoaded) {
-		// free all the textures in assets
+		for (Frame* e : frames) {
+			delete e;
+		}
 	}
 }
-//a.insert(a.end(), b.begin(), b.end());
+
 int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 
 	if (areTexturesLoaded) {
@@ -109,7 +111,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 		frames.insert(frames.end(), textureBuffer.begin(), textureBuffer.end());
 
 		// the map needs an AFrame, which collects all the order information for us.
-		AFrame* assetAFrame = new AFrame();
+		AFrame* assetAFrame{};
 
 		// more regex yay
 		std::sregex_iterator orders(assetIterator->str(2).begin(),assetIterator->str(2).end(), orderEntry);
@@ -157,6 +159,8 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 		++assetIterator;
 	}
 
+	areTexturesLoaded = true;
+
 }
 
 AFrame* AssetManager::getAFrame(std::string key) {
@@ -165,7 +169,7 @@ AFrame* AssetManager::getAFrame(std::string key) {
 
 
 
-Order::Order(int msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) : msPerFrame(msPerFrame), frames(frames), offsets(offsets), scale(scale) {}
+Order::Order(double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) : msPerFrame(msPerFrame), frames(frames), offsets(offsets), scale(scale) {}
 
 Order::~Order() {}
 
@@ -179,8 +183,8 @@ void AFrame::update(SDL_Rect camera) {
 
 }
 
-void AFrame::addOrder(std::string name, int msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) {
-	orders.emplace(name, new Order(msPerFrame, frames, offsets, scale));
+void AFrame::addOrder(std::string name, double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) {
+	orders.emplace(name, Order(msPerFrame, frames, offsets, scale));
 }
 
 

@@ -23,11 +23,11 @@ private:
 class Order {
 
 public:
-	Order(int msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale);
+	Order(double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale);
 	~Order();
 
 private:
-	int msPerFrame;
+	double msPerFrame;
 	std::vector<Frame*> frames;
 	std::vector<SDL_Point> offsets;
 	double scale;
@@ -41,10 +41,10 @@ public:
 	AFrame();
 	~AFrame();
 	void update(SDL_Rect camera);
-	void addOrder(std::string name, int msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale);
+	void addOrder(std::string name, double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale);
 
 private:
-	std::map<std::string, std::vector<Frame*> > orders;
+	std::map<std::string, Order > orders;
 
 };
 
