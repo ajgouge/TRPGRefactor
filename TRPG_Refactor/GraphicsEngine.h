@@ -60,7 +60,7 @@ public:
 	AFrame* getAFrame(std::string key);
 
 private:
-	std::map< std::string, AFrame* > assets;
+	std::map< std::string, AFrame > assets;
 	std::vector< Frame* > frames;
 	bool areTexturesLoaded;
 

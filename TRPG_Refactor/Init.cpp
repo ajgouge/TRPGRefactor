@@ -6,8 +6,10 @@
 #include <string>
 #include "GraphicsEngine.h"
 
+#include <regex>
+
 const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_HEIGHT = 640;
 
 int main(int argc, char* args[]) {
 	
@@ -36,7 +38,7 @@ int main(int argc, char* args[]) {
 				printf("Renderer blend mode could not be set. SDL_Error: %s\n", SDL_GetError());
 			}
 
-			SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			SDL_RenderClear(renderer);
 			SDL_RenderPresent(renderer);
 			SDL_Delay(2000);
@@ -45,21 +47,20 @@ int main(int argc, char* args[]) {
 			std::string basePath(c_basePath);
 			printf("Project directory: %s\n", basePath.c_str());
 
-			SDL_RWops* fReader = SDL_RWFromFile(basePath.append("assets\\objects.txt").c_str(),"r");
+			AssetManager assets;
+			assets.loadAssets(renderer, basePath + "assets\\");
 
-			if (fReader == NULL) {
-				printf("file reader is null. SDL_Error: %s\n", SDL_GetError());
-			}
+			AnimationManager animator;
+			std::vector<Sprite*> sprites;
+			
+			sprites.push_back(animator.addSprite(assets.getAFrame("apc"),"idle"));
 
-			SDL_Rect offscreenRect;
-			offscreenRect.x = -20;
-			offscreenRect.y = -20;
-			offscreenRect.w = 40;
-			offscreenRect.h = 40;
-
-			SDL_RenderClear(renderer);
-			SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-			SDL_RenderFillRect(renderer,&offscreenRect);
+			SDL_Rect camera;
+			camera.x = 0;
+			camera.y = 0;
+			camera.w = SCREEN_WIDTH;
+			camera.h = SCREEN_HEIGHT;
+			sprites[0]->render(camera);
 
 			SDL_RenderPresent(renderer);
 
