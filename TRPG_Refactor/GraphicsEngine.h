@@ -11,6 +11,7 @@ public:
 	Frame();
 	Frame(SDL_Renderer* renderer, SDL_Texture* graphic);
 	~Frame();
+	void queryWidthHeight(int* w, int* h);
 	void render(SDL_Rect* dst);
 
 private:
@@ -25,6 +26,7 @@ class Order {
 public:
 	Order(double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale);
 	~Order();
+	void drawFrame(int screenX, int screenY, int frame);
 
 private:
 	double msPerFrame;
@@ -40,7 +42,7 @@ class AFrame {
 public:
 	AFrame();
 	~AFrame();
-	void update(SDL_Rect camera);
+	void draw(int screenX, int screenY, std::string order, int frame);
 	void addOrder(std::string name, double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale);
 
 private:
@@ -68,15 +70,30 @@ private:
 class Sprite {
 
 public:
-	Sprite();
+	Sprite(AFrame* frames, std::string order);
+	Sprite(AFrame* frames, std::string order, int x, int y);
 	~Sprite();
 	void render(SDL_Rect camera);
 
 private:
 	int x;
 	int y;
-	std::vector<AFrame*> graphics;
-	int AIndex;
+	AFrame* graphics;
+	std::string order;
 	int flags;
+
+};
+
+class AnimationManager {
+
+public:
+	AnimationManager();
+	~AnimationManager();
+	Sprite* addSprite(AFrame* graphics, std::string order);
+	void removeSprite(Sprite* sprite);
+	void updateSprites(SDL_Rect camera);
+
+private:
+	std::vector<Sprite*> sprites;
 
 };

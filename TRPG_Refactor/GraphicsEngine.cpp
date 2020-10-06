@@ -12,12 +12,7 @@ Frame::Frame() {
 	texture = NULL;
 }
 
-Frame::Frame(SDL_Renderer* renderer, SDL_Texture* graphic) : renderer(renderer), texture(graphic) {
-	// This is something AFrames has to do now, so I'll leave it here until I do that
-	//if (SDL_QueryTexture(graphic, NULL, NULL, &(this->rect.w), &(this->rect.h)) < 0) {
-	//	printf("Frame::Frame: Couldn't query texture. SDL_Error: %s\n", SDL_GetError());
-	//}
-}
+Frame::Frame(SDL_Renderer* renderer, SDL_Texture* graphic) : renderer(renderer), texture(graphic) {}
 
 Frame::~Frame() {
 	// We don't want to destroy the renderer (since everyone uses that), but the texture should
@@ -25,6 +20,12 @@ Frame::~Frame() {
 	renderer = NULL;
 	SDL_DestroyTexture(texture);
 	texture = NULL;
+}
+
+void Frame::queryWidthHeight(int* w, int* h) {
+	if (SDL_QueryTexture(texture, NULL, NULL, w, h) < 0) {
+		printf("Frame::Frame: Couldn't query texture. SDL_Error: %s\n", SDL_GetError());
+	}
 }
 
 void Frame::render(SDL_Rect* dst) {
@@ -173,14 +174,24 @@ Order::Order(double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Poin
 
 Order::~Order() {}
 
+void Order::drawFrame(int screenX, int screenY, int frame) {
+	SDL_Rect dst;
+	dst.x = screenX + offsets.at(frame).x;
+	dst.y = screenY + offsets.at(frame).y;
+	frames.at(frame)->queryWidthHeight(&(dst.w), &(dst.h));
+	dst.w *= scale;
+	dst.h *= scale;
+	frames.at(frame)->render(&dst);
+}
+
 
 
 AFrame::AFrame() {}
 
 AFrame::~AFrame() {}
 
-void AFrame::update(SDL_Rect camera) {
-
+void AFrame::draw(int screenX, int screenY, std::string order, int frame) {
+	orders.at(order).drawFrame(screenX, screenY, frame);
 }
 
 void AFrame::addOrder(std::string name, double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) {
@@ -189,14 +200,48 @@ void AFrame::addOrder(std::string name, double msPerFrame, std::vector<Frame*> f
 
 
 
-Sprite::Sprite() {
-
-}
+Sprite::Sprite(AFrame* frames, std::string order) : graphics(frames), x(0), y(0), order(order), flags(0) {}
+Sprite::Sprite(AFrame* frames, std::string order, int x, int y) : graphics(frames), x(x), y(y), order(order), flags(0) {}
 
 Sprite::~Sprite() {
 
 }
 
 void Sprite::render(SDL_Rect camera) {
+	// DEBUG:: only draws the first frame for now, we need logic to handle this later
+	graphics->draw(x - camera.x, y - camera.y, order, 0);
+}
 
+
+
+AnimationManager::AnimationManager() {}
+
+AnimationManager::~AnimationManager() {
+	for (Sprite* e : sprites) {
+		delete e;
+	}
+}
+
+Sprite* AnimationManager::addSprite(AFrame* graphics, std::string order) {
+	Sprite* sprite = new Sprite(graphics, order);
+	sprites.push_back(sprite);
+	return sprite;
+}
+
+void AnimationManager::removeSprite(Sprite* sprite) {
+	int i = 0;
+	for (Sprite* e : sprites) {
+		if (e == sprite) {
+			sprites.erase(sprites.begin() + i);
+			break;
+		}
+		++i;
+	}
+	delete sprite;
+}
+
+void AnimationManager::updateSprites(SDL_Rect camera) {
+	for (Sprite* e : sprites) {
+		e->render(camera);
+	}
 }
