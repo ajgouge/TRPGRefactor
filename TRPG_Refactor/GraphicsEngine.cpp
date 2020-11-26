@@ -7,10 +7,10 @@
 #include <sstream>
 #include <regex>
 
-Frame::Frame() {
-	renderer = NULL;
-	texture = NULL;
-}
+//Frame::Frame() {
+//	renderer = NULL;
+//	texture = NULL;
+//}
 
 Frame::Frame(SDL_Renderer* renderer, SDL_Texture* graphic) : renderer(renderer), texture(graphic) {}
 
@@ -108,7 +108,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 			// we assume all the assets are stored as assets\name\name_[i].png, where i starts at 0 and increments each time
 			// these i values are used later in the order lists to specify which frames occur in each order
 			img = IMG_Load((assetDir + assetName + "\\" + assetName + "_" + std::to_string(i) + ".png").c_str());
-			printf("%d: Attempted loading asset of name %s, result was %hi\n", i, (assetDir + assetName + "\\" + assetName + "_" + std::to_string(i) + ".png").c_str(), img);
+			//printf("%d: Attempted loading asset of name %s, result was %hi\n", i, (assetDir + assetName + "\\" + assetName + "_" + std::to_string(i) + ".png").c_str(), img);
 			// if the load didn't work, then there shouldn't be any more assets
 			if (img == NULL) {
 				// DEBUG:: print statement
@@ -195,6 +195,8 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 
 	areTexturesLoaded = true;
 
+	return 0;
+
 }
 
 AFrame* AssetManager::getAFrame(std::string key) {
@@ -213,10 +215,18 @@ void Order::drawFrame(int screenX, int screenY, int frame) {
 	dst.x = screenX + offsets.at(frame).x;
 	dst.y = screenY + offsets.at(frame).y;
 	frames.at(frame)->queryWidthHeight(&(dst.w), &(dst.h));
-	dst.w *= scale;
-	dst.h *= scale;
+	dst.w = (int)(dst.w * scale);
+	dst.h = (int)(dst.h * scale);
 	printf("Done. dst = [x(%d),y(%d),w(%d),h(%d)]. Drawing frame %d to this rectangle...\n", dst.x, dst.y, dst.w, dst.h, frame);
 	frames.at(frame)->render(&dst);
+}
+
+double Order::getMSPerFrame() {
+	return msPerFrame;
+}
+
+size_t Order::getLength() {
+	return frames.size();
 }
 
 
@@ -234,35 +244,89 @@ void AFrame::addOrder(std::string name, double msPerFrame, std::vector<Frame*> f
 	orders.emplace(name, Order(msPerFrame, frames, offsets, scale));
 }
 
+double AFrame::getOrderMSPerFrame(std::string order) {
+	return orders.at(order).getMSPerFrame();
+}
+
+size_t AFrame::getOrderLength(std::string order) {
+	return orders.at(order).getLength();
+}
 
 
-Sprite::Sprite(AFrame* frames, std::string order) : graphics(frames), x(0), y(0), order(order), flags(0) {}
-Sprite::Sprite(AFrame* frames, std::string order, int x, int y) : graphics(frames), x(x), y(y), order(order), flags(0) {}
+
+Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera) : graphics(frames), x(0), y(0), order(order), orderPosition(0), flags(0), callbackID(callbackID) {
+	callbackArg.spr = this;
+	callbackArg.cam = camera;
+	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
+	orderLength = frames->getOrderLength(order);
+}
+Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera, int x, int y) : graphics(frames), x(x), y(y), order(order), orderPosition(0), flags(0), callbackID(callbackID) {
+	callbackArg.spr = this;
+	callbackArg.cam = camera;
+	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
+	orderLength = frames->getOrderLength(order);
+}
 
 Sprite::~Sprite() {
-
+	SDL_RemoveTimer(callbackID);
 }
 
-void Sprite::render(SDL_Rect camera) {
+void Sprite::render(SDL_Rect* camera) {
 	// DEBUG:: only draws the first frame for now, we need logic to handle this later
 	printf("Drawing sprite order %s at %d,%d...\n", order.c_str(), x, y);
-	graphics->draw(x - camera.x, y - camera.y, order, 0);
+	graphics->draw(x - camera->x, y - camera->y, order, orderPosition);
 }
 
+Uint32 Sprite::callback_render(Uint32 interval, void* sp) {
+	
+	SpriteCallbackArg* args = (SpriteCallbackArg*)sp;
+
+	(args->spr->orderPosition)++;
+	if (args->spr->orderPosition >= args->spr->orderLength) args->spr->orderPosition = 0;
+	//printf("Callback from sprite %hi updated to order position %i of %i.\n", args->spr, args->spr->orderPosition, args->spr->orderLength - 1);
+	//args->spr->render(args->cam);
+	
+	return interval;
+}
+
+SpriteCallbackArg* Sprite::getCallbackArg() {
+	return &callbackArg;
+}
+
+void Sprite::setX(int newX) { x = newX; }
+void Sprite::setY(int newY) { y = newY; }
+void Sprite::setXY(int newX, int newY) { x = newX; y = newY; }
+int Sprite::moveX(int xOffset) { x += xOffset; return x; }
+int Sprite::moveY(int yOffset) { y += yOffset; return y; }
 
 
-AnimationManager::AnimationManager() {}
+
+AnimationManager::AnimationManager() {
+	camera = new SDL_Rect;
+	camera->x = 0;
+	camera->y = 0;
+	camera->h = 0;
+	camera->w = 0;
+}
 
 AnimationManager::~AnimationManager() {
 	for (Sprite* e : sprites) {
 		delete e;
 	}
+	delete camera;
 }
 
 Sprite* AnimationManager::addSprite(AFrame* graphics, std::string order) {
-	Sprite* sprite = new Sprite(graphics, order);
+	Sprite* sprite = new Sprite(graphics, order, camera);
 	sprites.push_back(sprite);
+	sprite->render(camera);
 	return sprite;
+}
+
+void AnimationManager::updateSprites() {
+	for (Sprite* e : sprites) {
+		e->render(camera);
+	}
 }
 
 void AnimationManager::removeSprite(Sprite* sprite) {
@@ -277,8 +341,48 @@ void AnimationManager::removeSprite(Sprite* sprite) {
 	delete sprite;
 }
 
-void AnimationManager::updateSprites(SDL_Rect camera) {
-	for (Sprite* e : sprites) {
-		e->render(camera);
+void AnimationManager::setCamera(SDL_Rect* camera) { 
+	// we do a deep copy so that the other addresses remain valid
+	this->camera->x = camera->x; 
+	this->camera->y = camera->y;
+	this->camera->w = camera->w;
+	this->camera->h = camera->h;
+}
+SDL_Rect* AnimationManager::getCamera() { return camera; }
+
+
+void GE_PushFromBackbuffer(SDL_Renderer* renderer, SDL_Texture* backbuffer, int screenHeight, int screenWidth) {
+	
+	SDL_SetRenderTarget(renderer, NULL);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	
+	// do some math to make the texture fit and scale
+	int virtualHeight, virtualWidth;
+	SDL_QueryTexture(backbuffer, NULL, NULL, &virtualWidth, &virtualHeight);
+	double hScale = (double)screenHeight / (double)virtualHeight, wScale = (double)screenWidth / (double)virtualWidth;
+	double scale = (hScale < wScale) ? hScale : wScale;
+
+	SDL_Rect dest;
+	dest.w = (int)(virtualWidth * scale);
+	dest.h = (int)(virtualHeight * scale);
+
+	if (dest.w != screenWidth) {
+		dest.y = 0;
+		dest.x = (screenWidth - dest.w) / 2;
 	}
+	else if (dest.h != screenHeight) {
+		dest.x = 0;
+		dest.y = (screenHeight - dest.h) / 2;
+	}
+	else {
+		dest.x = 0;
+		dest.y = 0;
+	}
+
+	SDL_RenderCopy(renderer, backbuffer, NULL, &dest);
+
+	SDL_RenderPresent(renderer);
+
+	SDL_SetRenderTarget(renderer, backbuffer);
 }
