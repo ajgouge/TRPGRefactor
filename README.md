@@ -1,7 +1,7 @@
 # TRPGRefactor
 A cleanup of an earlier project of mine, in an attempt to make it more workable.
 
-The older version of this project can be found at <a href="https://github.com/ajgouge/Final-Project">ajgouge/Final-Project</a>. It was full of bad practice and bugs, so I'm attempting to clean it up and make it better.
+The older version of this project can be found at <a href="https://github.com/ajgouge/Final-Project">ajgouge/Final-Project</a>. It was full of bad practices and bugs, so I'm attempting to clean it up and make it better.
 
 This includes the following:
 <ul>
