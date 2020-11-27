@@ -12,8 +12,16 @@
 //	texture = NULL;
 //}
 
+/// <summary>
+/// The basic Frame constructor you should always use.
+/// </summary>
+/// <param name="renderer">The current renderer</param>
+/// <param name="graphic">A texture to wrap with that renderer</param>
 Frame::Frame(SDL_Renderer* renderer, SDL_Texture* graphic) : renderer(renderer), texture(graphic) {}
 
+/// <summary>
+/// Destructor for Frame
+/// </summary>
 Frame::~Frame() {
 	// We don't want to destroy the renderer (since everyone uses that), but the texture should
 	// only be ours. We can destroy that.
@@ -22,24 +30,38 @@ Frame::~Frame() {
 	texture = NULL;
 }
 
+/// <summary>
+/// Lets you grab the width and height of the internal texture, just in case
+/// </summary>
+/// <param name="w">int pointer to place the width</param>
+/// <param name="h">int pointer to place the height</param>
 void Frame::queryWidthHeight(int* w, int* h) {
 	if (SDL_QueryTexture(texture, NULL, NULL, w, h) < 0) {
 		printf("Frame::Frame: Couldn't query texture. SDL_Error: %s\n", SDL_GetError());
 	}
 }
 
+/// <summary>
+/// Call this to render the internal texture to the active render target
+/// </summary>
+/// <param name="dst">destination SDL_Rect</param>
 void Frame::render(SDL_Rect* dst) {
-	printf("Frame:: preparing to render...\n");
+	//printf("Frame:: preparing to render...\n");
 	if (SDL_RenderCopy(renderer, texture, NULL, dst) < 0) {
 		printf("Frame::render(): Failed to render. SDL_Error: %s\n", SDL_GetError());
 	}
-	printf("Done. Frame succesfully rendered...\n");
+	//printf("Done. Frame succesfully rendered...\n");
 }
 
 
-
+/// <summary>
+/// AssetManager constructor; doesn't actually do much. Call loadAssets before using.
+/// </summary>
 AssetManager::AssetManager() { areTexturesLoaded = false; }
 
+/// <summary>
+/// AssetManager destructor. DELETES all internal frames! You don't have to do that yourself!
+/// </summary>
 AssetManager::~AssetManager() {
 	if (areTexturesLoaded) {
 		for (Frame* e : frames) {
@@ -48,6 +70,14 @@ AssetManager::~AssetManager() {
 	}
 }
 
+/// <summary>
+/// This is what actually inits the AssetManager, now with a useful(ish) return!
+/// Automagically loads all correctly formatted assets in the given directory.
+/// </summary>
+/// <param name="renderer">The active renderer</param>
+/// <param name="assetDir">An absolute path to the assets, with a trailing \ character.
+///  Use SDL_GetBasePath() and then append the relative path.</param>
+/// <returns>0 if everything went smoothly; -1 or something else if not. Check stdout for more details.</returns>
 int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 
 	if (areTexturesLoaded) {
@@ -199,25 +229,43 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 
 }
 
+/// <summary>
+/// Once loaded, gets the AFrame with the input key
+/// </summary>
+/// <param name="key">The name of the AFrame to get. This should've been the name of each
+///  file in the asset directory, if you remove the number afterwards.</param>
+/// <returns>A pointer to the requested AFrame, usually to give your Sprites.</returns>
 AFrame* AssetManager::getAFrame(std::string key) {
 	return &(assets.at(key));
 }
 
 
-
+/// <summary>
+/// The Order constructor. Pretty basic.
+/// </summary>
+/// <param name="msPerFrame">After this much time, the Order will advance to the next Frame.</param>
+/// <param name="frames">This should be all the frames, IN ORDER.</param>
+/// <param name="offsets">And these are the offsets, in the same order as frames.</param>
+/// <param name="scale">Each frame will be scaled up or down by this amount. Leave 1.0 for no scaling.</param>
 Order::Order(double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) : msPerFrame(msPerFrame), frames(frames), offsets(offsets), scale(scale) {}
 
 Order::~Order() {}
 
+/// <summary>
+/// Renders the requested frame in the order at the given coordinates.
+/// </summary>
+/// <param name="screenX"></param>
+/// <param name="screenY"></param>
+/// <param name="frame">An index of the frames Vector telling which Frame to render.</param>
 void Order::drawFrame(int screenX, int screenY, int frame) {
-	printf("Order:: Preparing dst rectangle...\n");
+	//printf("Order:: Preparing dst rectangle...\n");
 	SDL_Rect dst;
 	dst.x = screenX + offsets.at(frame).x;
 	dst.y = screenY + offsets.at(frame).y;
 	frames.at(frame)->queryWidthHeight(&(dst.w), &(dst.h));
 	dst.w = (int)(dst.w * scale);
 	dst.h = (int)(dst.h * scale);
-	printf("Done. dst = [x(%d),y(%d),w(%d),h(%d)]. Drawing frame %d to this rectangle...\n", dst.x, dst.y, dst.w, dst.h, frame);
+	//printf("Done. dst = [x(%d),y(%d),w(%d),h(%d)]. Drawing frame %d to this rectangle...\n", dst.x, dst.y, dst.w, dst.h, frame);
 	frames.at(frame)->render(&dst);
 }
 
@@ -235,11 +283,26 @@ AFrame::AFrame() {}
 
 AFrame::~AFrame() {}
 
+/// <summary>
+/// Renders the requested Frame of the given Order at the given coordinates.
+/// </summary>
+/// <param name="screenX"></param>
+/// <param name="screenY"></param>
+/// <param name="order">This should be the name of an Order for this AFrame, otherwise things won't work (TODO: Prevent this or make this an error)</param>
+/// <param name="frame">See Order::drawFrame</param>
 void AFrame::draw(int screenX, int screenY, std::string order, int frame) {
-	printf("AFrame:: Drawing frame %d of order %s to position %d,%d...\n", frame, order.c_str(), screenX, screenY);
+	//printf("AFrame:: Drawing frame %d of order %s to position %d,%d...\n", frame, order.c_str(), screenX, screenY);
 	orders.at(order).drawFrame(screenX, screenY, frame);
 }
 
+/// <summary>
+/// Adds a new Order to this AFrame with the given attributes and name.
+/// </summary>
+/// <param name="name">This should be unique to any other name already in this AFrame!</param>
+/// <param name="msPerFrame"></param>
+/// <param name="frames"></param>
+/// <param name="offsets"></param>
+/// <param name="scale"></param>
 void AFrame::addOrder(std::string name, double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) {
 	orders.emplace(name, Order(msPerFrame, frames, offsets, scale));
 }
@@ -253,30 +316,60 @@ size_t AFrame::getOrderLength(std::string order) {
 }
 
 
-
-Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera) : graphics(frames), x(0), y(0), order(order), orderPosition(0), flags(0), callbackID(callbackID) {
+/// <summary>
+/// Constructor for Sprite; defaults x and y to 0.
+/// </summary>
+/// <param name="frames"></param>
+/// <param name="order"></param>
+/// <param name="camera"></param>
+Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera) : graphics(frames), x(0), y(0), order(order), orderPosition(0), flags(0) {
 	callbackArg.spr = this;
 	callbackArg.cam = camera;
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	orderLength = frames->getOrderLength(order);
 }
-Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera, int x, int y) : graphics(frames), x(x), y(y), order(order), orderPosition(0), flags(0), callbackID(callbackID) {
+/// <summary>
+/// Constructor for Sprite. 
+/// </summary>
+/// <param name="frames">A pointer to the AFrame to get animations from.</param>
+/// <param name="order">The Order of the given AFrame to start with. It will start at the first entry for the Order</param>
+/// <param name="camera">A pointer to the SDL_Rect being used as the camera. You either maintain this yourself, or use the
+///  one supplied by your AnimationManager (recommended).</param>
+/// <param name="x"></param>
+/// <param name="y"></param>
+Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera, int x, int y) : graphics(frames), x(x), y(y), order(order), orderPosition(0), flags(0) {
 	callbackArg.spr = this;
 	callbackArg.cam = camera;
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	orderLength = frames->getOrderLength(order);
 }
 
+/// <summary>
+/// Sprite destructor. Simply cleans up the animation callback.
+/// </summary>
 Sprite::~Sprite() {
 	SDL_RemoveTimer(callbackID);
 }
 
+/// <summary>
+/// Draws the Sprite using the given camera (TODO: don't we already have the camera?). Note: The actual frame rendered is handled by 
+///  a timer that cycles through the active Order of the AFrame. You have to actually render it for the graphic to update.
+///  Ideally, you should just sync to VSync and render everything once per main loop, and then if the graphic updated, it'll
+///  update. OR you could just put everything in an AnimationManager, and it'll do that for you. Just sayin.
+/// </summary>
+/// <param name="camera">The camera to use (?) for rendering.</param>
 void Sprite::render(SDL_Rect* camera) {
 	// DEBUG:: only draws the first frame for now, we need logic to handle this later
-	printf("Drawing sprite order %s at %d,%d...\n", order.c_str(), x, y);
+	//printf("Drawing sprite order %s at %d,%d...\n", order.c_str(), x, y);
 	graphics->draw(x - camera->x, y - camera->y, order, orderPosition);
 }
 
+/// <summary>
+/// Updates the current Frame at the correct interval for this Order. This all happens under the hood.
+/// </summary>
+/// <param name="interval"></param>
+/// <param name="sp"></param>
+/// <returns></returns>
 Uint32 Sprite::callback_render(Uint32 interval, void* sp) {
 	
 	SpriteCallbackArg* args = (SpriteCallbackArg*)sp;
@@ -289,6 +382,11 @@ Uint32 Sprite::callback_render(Uint32 interval, void* sp) {
 	return interval;
 }
 
+/// <summary>
+/// For getting the args passed to the callback, if you want that for some reason. I guess you could
+/// update those args that way, but there aren't any you'd want to update yet.
+/// </summary>
+/// <returns></returns>
 SpriteCallbackArg* Sprite::getCallbackArg() {
 	return &callbackArg;
 }
@@ -301,6 +399,9 @@ int Sprite::moveY(int yOffset) { y += yOffset; return y; }
 
 
 
+/// <summary>
+/// Inits a new AnimationManager with a default camera, being all 0's.
+/// </summary>
 AnimationManager::AnimationManager() {
 	camera = new SDL_Rect;
 	camera->x = 0;
@@ -309,6 +410,9 @@ AnimationManager::AnimationManager() {
 	camera->w = 0;
 }
 
+/// <summary>
+/// AnimationManager destructor. Deletes all Sprites it's responsible for as well as the camera.
+/// </summary>
 AnimationManager::~AnimationManager() {
 	for (Sprite* e : sprites) {
 		delete e;
@@ -316,6 +420,13 @@ AnimationManager::~AnimationManager() {
 	delete camera;
 }
 
+/// <summary>
+/// Adds a new Sprite. Once added, the AnimationManager assumes ownership of the Sprite and will delete it when it's destroyed.
+/// DON'T delete it yourself. You still get a pointer to it for updating its values, but do not delete it.
+/// </summary>
+/// <param name="graphics"></param>
+/// <param name="order"></param>
+/// <returns></returns>
 Sprite* AnimationManager::addSprite(AFrame* graphics, std::string order) {
 	Sprite* sprite = new Sprite(graphics, order, camera);
 	sprites.push_back(sprite);
@@ -323,12 +434,20 @@ Sprite* AnimationManager::addSprite(AFrame* graphics, std::string order) {
 	return sprite;
 }
 
+/// <summary>
+/// Renders all the Sprites managed by this AnimationManager. Call this once in your main loop.
+/// </summary>
 void AnimationManager::updateSprites() {
 	for (Sprite* e : sprites) {
 		e->render(camera);
 	}
 }
 
+/// <summary>
+/// Removes the input sprite from the Manager. This will delete it. It will NOT delete its
+/// AFrame or any associated graphics; those remain for later use by other Sprites.
+/// </summary>
+/// <param name="sprite"></param>
 void AnimationManager::removeSprite(Sprite* sprite) {
 	int i = 0;
 	for (Sprite* e : sprites) {
@@ -341,6 +460,11 @@ void AnimationManager::removeSprite(Sprite* sprite) {
 	delete sprite;
 }
 
+/// <summary>
+/// Updates the camera to a new set of values. It still maintains the old address for the camera, so
+/// past references are valid while this one passed in isn't. That's probably bad design (TODO: fix that)
+/// </summary>
+/// <param name="camera"></param>
 void AnimationManager::setCamera(SDL_Rect* camera) { 
 	// we do a deep copy so that the other addresses remain valid
 	this->camera->x = camera->x; 
@@ -350,7 +474,18 @@ void AnimationManager::setCamera(SDL_Rect* camera) {
 }
 SDL_Rect* AnimationManager::getCamera() { return camera; }
 
-
+/// <summary>
+/// Helper function. Call this in the main loop instead of SDL_RenderPresent.
+/// 
+/// To make resizing easier, we maintain a backbuffer texture and render all updates to that. It has a constant size. Then,
+///  we render this to the screen, scaling and adjusting without stretching. If the aspect ratios don't match, this adds black
+///  bars to the screen to prevent stretching. Note that you don't have to worry about switching the render targets. Just make sure the
+///  backbuffer is still there.
+/// </summary>
+/// <param name="renderer">The active renderer.</param>
+/// <param name="backbuffer">The backbuffer texture to render to the screen.</param>
+/// <param name="screenHeight">The ACTUAL height of the window.</param>
+/// <param name="screenWidth">The ACTUAL width of the window.</param>
 void GE_PushFromBackbuffer(SDL_Renderer* renderer, SDL_Texture* backbuffer, int screenHeight, int screenWidth) {
 	
 	SDL_SetRenderTarget(renderer, NULL);
