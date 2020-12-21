@@ -1,11 +1,13 @@
 #include <stdio.h>
+#include <regex>
+#include <string>
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
-#include <string>
+
 #include "GraphicsEngine.h"
-#include <regex>
 
 // this should be a good internal target
 const int SCREEN_WIDTH = 1280;
@@ -144,7 +146,7 @@ int main(int argc, char* args[]) {
 				while (SDL_PollEvent(&event)) {
 					if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
 						isQuit = true;
-					if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+					if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
 						displayHeight = event.window.data2;
 						displayWidth = event.window.data1;
 					}
@@ -160,6 +162,7 @@ int main(int argc, char* args[]) {
 				if (isQuit) break;
 			}
 
+			SDL_DestroyTexture(resBuffer);
 			SDL_DestroyRenderer(renderer);
 			SDL_DestroyWindow(window);
 

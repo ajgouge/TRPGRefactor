@@ -1,9 +1,11 @@
-#pragma once
+#ifndef GRAPHICSENGINE_H
+#define GRAPHICSENGINE_H
 
 #include <vector>
-#include <SDL.h>
 #include <string>
 #include <map>
+
+#include <SDL.h>
 
 class Sprite;
 
@@ -173,3 +175,6 @@ private:
 
 // renders the backbuffer to the window, adjusting scale and preventing stretching
 void GE_PushFromBackbuffer(SDL_Renderer* renderer, SDL_Texture* backbuffer, int screenHeight, int screenWidth);
+
+
+#endif
