@@ -120,7 +120,7 @@ class Sprite {
 public:
 	// x and y default to 0 in this case
 	Sprite(AFrame* frames, std::string order, SDL_Rect* camera);
-	Sprite(AFrame* frames, std::string order, SDL_Rect* camera, int x, int y);
+	Sprite(AFrame* frames, std::string order, SDL_Rect* camera, int x, int y, int zlayer);
 	~Sprite();
 	// renders the Sprite using the given camera (TODO: is that right?)
 	void render(SDL_Rect* camera);
@@ -134,10 +134,13 @@ public:
 	// adds the input value to x and y, rather than updating it to the input
 	int moveX(int xOffset);
 	int moveY(int yOffset);
+	int getZlayer();
+	void setZlayer(int z);
 
 private:
 	int x;
 	int y;
+	int zlayer;
 	AFrame* graphics;
 	std::string order;
 	int orderPosition;

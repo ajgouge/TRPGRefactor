@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <regex>
+#include <queue>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -319,12 +320,12 @@ size_t AFrame::getOrderLength(std::string order) {
 
 
 /// <summary>
-/// Constructor for Sprite; defaults x and y to 0.
+/// Constructor for Sprite; defaults x and y to 0. z layer is also 0.
 /// </summary>
 /// <param name="frames"></param>
 /// <param name="order"></param>
 /// <param name="camera"></param>
-Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera) : graphics(frames), x(0), y(0), order(order), orderPosition(0), flags(0) {
+Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera) : graphics(frames), x(0), y(0), order(order), orderPosition(0), flags(0), zlayer(0) {
 	callbackArg.spr = this;
 	callbackArg.cam = camera;
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
@@ -339,7 +340,7 @@ Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera) : graphics(f
 ///  one supplied by your AnimationManager (recommended).</param>
 /// <param name="x"></param>
 /// <param name="y"></param>
-Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera, int x, int y) : graphics(frames), x(x), y(y), order(order), orderPosition(0), flags(0) {
+Sprite::Sprite(AFrame* frames, std::string order, SDL_Rect* camera, int x, int y, int zlayer) : graphics(frames), x(x), y(y), order(order), orderPosition(0), flags(0), zlayer(zlayer) {
 	callbackArg.spr = this;
 	callbackArg.cam = camera;
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
@@ -368,6 +369,7 @@ void Sprite::render(SDL_Rect* camera) {
 
 /// <summary>
 /// Updates the current Frame at the correct interval for this Order. This all happens under the hood.
+/// Note: Deceiving name! This doesn't actually render anything, it just sets up the next render!
 /// </summary>
 /// <param name="interval"></param>
 /// <param name="sp"></param>
@@ -398,6 +400,8 @@ void Sprite::setY(int newY) { y = newY; }
 void Sprite::setXY(int newX, int newY) { x = newX; y = newY; }
 int Sprite::moveX(int xOffset) { x += xOffset; return x; }
 int Sprite::moveY(int yOffset) { y += yOffset; return y; }
+int Sprite::getZlayer() { return zlayer; }
+void Sprite::setZlayer(int z) { zlayer = z; }
 
 
 
@@ -438,11 +442,29 @@ Sprite* AnimationManager::addSprite(AFrame* graphics, std::string order) {
 
 /// <summary>
 /// Renders all the Sprites managed by this AnimationManager. Call this once in your main loop.
+/// Renders everything in z stages. Lower z values render first.
 /// </summary>
 void AnimationManager::updateSprites() {
+
+	// make a compare lambda for the PQ
+	auto compare = [](Sprite* left, Sprite* right) {
+		// false if left >= right, otherwise true
+		// (that has to be not >=, since comp(a,a) must be false)
+		return !(left->getZlayer() >= right->getZlayer());
+	};
+	std::priority_queue<Sprite*, std::vector<Sprite*>, decltype(compare)> heap(compare);
+
+	// push everything by zorder
 	for (Sprite* e : sprites) {
-		e->render(camera);
+		heap.push(e);
 	}
+
+	// then render in zorder
+	while (!heap.empty()) {
+		(heap.top())->render(camera);
+		heap.pop();
+	}
+
 }
 
 /// <summary>

@@ -8,10 +8,12 @@
 #include <SDL_mixer.h>
 
 #include "GraphicsEngine.h"
+#include "Tiles.h"
 
-// this should be a good internal target
+// this should be a good internal target (for now)
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
+const int TILE_SIZE = 64;
 
 int main(int argc, char* args[]) {
 	
@@ -90,42 +92,42 @@ int main(int argc, char* args[]) {
 			sprites.push_back(animator.addSprite(assets.getAFrame("submerged_submarine"),"idle"));
 			sprites.push_back(animator.addSprite(assets.getAFrame("transport_copter"),"idle"));
 
-			sprites[1]->setX(100);
-			sprites[2]->setX(200);
-			sprites[3]->setX(300);
-			sprites[4]->setX(400);
-			sprites[5]->setX(500);
-			sprites[6]->setX(600);
-			sprites[8]->setX(100);
-			sprites[9]->setX(200);
-			sprites[10]->setX(300);
-			sprites[11]->setX(400);
-			sprites[12]->setX(500);
-			sprites[13]->setX(600);
-			sprites[15]->setX(100);
-			sprites[16]->setX(200);
-			sprites[17]->setX(300);
-			sprites[18]->setX(400);
-			sprites[19]->setX(500);
-			sprites[20]->setX(600);
-			sprites[22]->setX(100);
+			sprites[1]->setX(64);
+			sprites[2]->setX(128);
+			sprites[3]->setX(192);
+			sprites[4]->setX(256);
+			sprites[5]->setX(320);
+			sprites[6]->setX(384);
+			sprites[8]->setX(64);
+			sprites[9]->setX(128);
+			sprites[10]->setX(192);
+			sprites[11]->setX(256);
+			sprites[12]->setX(320);
+			sprites[13]->setX(384);
+			sprites[15]->setX(64);
+			sprites[16]->setX(128);
+			sprites[17]->setX(192);
+			sprites[18]->setX(256);
+			sprites[19]->setX(320);
+			sprites[20]->setX(384);
+			sprites[22]->setX(64);
 
-			sprites[7]->setY(100);
-			sprites[8]->setY(100);
-			sprites[9]->setY(100);
-			sprites[10]->setY(100);
-			sprites[11]->setY(100);
-			sprites[12]->setY(100);
-			sprites[13]->setY(100);
-			sprites[14]->setY(200);
-			sprites[15]->setY(200);
-			sprites[16]->setY(200);
-			sprites[17]->setY(200);
-			sprites[18]->setY(200);
-			sprites[19]->setY(200);
-			sprites[20]->setY(200);
-			sprites[21]->setY(300);
-			sprites[22]->setY(300);
+			sprites[7]->setY(64);
+			sprites[8]->setY(64);
+			sprites[9]->setY(64);
+			sprites[10]->setY(64);
+			sprites[11]->setY(64);
+			sprites[12]->setY(64);
+			sprites[13]->setY(64);
+			sprites[14]->setY(128);
+			sprites[15]->setY(128);
+			sprites[16]->setY(128);
+			sprites[17]->setY(128);
+			sprites[18]->setY(128);
+			sprites[19]->setY(128);
+			sprites[20]->setY(128);
+			sprites[21]->setY(192);
+			sprites[22]->setY(192);
 
 
 			SDL_Rect* camera = animator.getCamera();
