@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <regex>
 #include <string>
+#include <functional>
 
 #include <SDL.h>
 #include <SDL_image.h>
@@ -52,7 +53,7 @@ int main(int argc, char* args[]) {
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 			SDL_RenderClear(renderer);
 			SDL_RenderPresent(renderer);
-			SDL_Delay(2000);
+			SDL_Delay(1000);
 
 			char* c_basePath = SDL_GetBasePath();
 			std::string basePath(c_basePath);
@@ -66,10 +67,15 @@ int main(int argc, char* args[]) {
 			}
 
 			AnimationManager animator;
-			std::vector<Sprite*> sprites;
+			std::vector<std::reference_wrapper<Sprite>> sprites;
+
+			printf("Assets loaded. Preparing to create Sprites...\n");
 			
-			sprites.push_back(animator.addSprite(assets.getAFrame("anti_air"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("apc"),"idle"));
+			Sprite& test = animator.addSprite(assets.getAFrame("anti_air"),"idle");
+
+			printf("Sprite created with scale %lf.\n", test.getScale());
+			//printf("If you see this, the error is very strange...\n");
+			/*sprites.push_back(animator.addSprite(assets.getAFrame("apc"),"idle"));
 			sprites.push_back(animator.addSprite(assets.getAFrame("artillery"),"idle"));
 			sprites.push_back(animator.addSprite(assets.getAFrame("battle_copter"),"idle"));
 			sprites.push_back(animator.addSprite(assets.getAFrame("battleship"),"idle"));
@@ -92,43 +98,47 @@ int main(int argc, char* args[]) {
 			sprites.push_back(animator.addSprite(assets.getAFrame("submerged_submarine"),"idle"));
 			sprites.push_back(animator.addSprite(assets.getAFrame("transport_copter"),"idle"));
 
-			sprites[1]->setX(64);
-			sprites[2]->setX(128);
-			sprites[3]->setX(192);
-			sprites[4]->setX(256);
-			sprites[5]->setX(320);
-			sprites[6]->setX(384);
-			sprites[8]->setX(64);
-			sprites[9]->setX(128);
-			sprites[10]->setX(192);
-			sprites[11]->setX(256);
-			sprites[12]->setX(320);
-			sprites[13]->setX(384);
-			sprites[15]->setX(64);
-			sprites[16]->setX(128);
-			sprites[17]->setX(192);
-			sprites[18]->setX(256);
-			sprites[19]->setX(320);
-			sprites[20]->setX(384);
-			sprites[22]->setX(64);
+			sprites[1].setX(64);
+			sprites[2].setX(128);
+			sprites[3].setX(192);
+			sprites[4].setX(256);
+			sprites[5].setX(320);
+			sprites[6].setX(384);
+			sprites[8].setX(64);
+			sprites[9].setX(128);
+			sprites[10].setX(192);
+			sprites[11].setX(256);
+			sprites[12].setX(320);
+			sprites[13].setX(384);
+			sprites[15].setX(64);
+			sprites[16].setX(128);
+			sprites[17].setX(192);
+			sprites[18].setX(256);
+			sprites[19].setX(320);
+			sprites[20].setX(384);
+			sprites[22].setX(64);
 
-			sprites[7]->setY(64);
-			sprites[8]->setY(64);
-			sprites[9]->setY(64);
-			sprites[10]->setY(64);
-			sprites[11]->setY(64);
-			sprites[12]->setY(64);
-			sprites[13]->setY(64);
-			sprites[14]->setY(128);
-			sprites[15]->setY(128);
-			sprites[16]->setY(128);
-			sprites[17]->setY(128);
-			sprites[18]->setY(128);
-			sprites[19]->setY(128);
-			sprites[20]->setY(128);
-			sprites[21]->setY(192);
-			sprites[22]->setY(192);
+			sprites[7].setY(64);
+			sprites[8].setY(64);
+			sprites[9].setY(64);
+			sprites[10].setY(64);
+			sprites[11].setY(64);
+			sprites[12].setY(64);
+			sprites[13].setY(64);
+			sprites[14].setY(128);
+			sprites[15].setY(128);
+			sprites[16].setY(128);
+			sprites[17].setY(128);
+			sprites[18].setY(128);
+			sprites[19].setY(128);
+			sprites[20].setY(128);
+			sprites[21].setY(192);
+			sprites[22].setY(192);*/
 
+			printf("All sprites set. Preparing Layer test...\n");
+
+			// Layer test
+			// Layer testLayer(animator, assets, basePath + "assets\\testmap1.txt");
 
 			SDL_Rect* camera = animator.getCamera();
 			camera->x = 0;
@@ -157,7 +167,12 @@ int main(int argc, char* args[]) {
 				SDL_SetRenderDrawColor(renderer, 50, 20, 20, 255);
 				SDL_RenderClear(renderer);
 
-				animator.updateSprites();
+				printf("Preparing to update Sprites...\n");
+
+				//animator.updateSprites();
+				test.render(camera);
+
+				printf("Done. Rendering backbuffer...\n");
 
 				GE_PushFromBackbuffer(renderer, resBuffer, displayHeight, displayWidth);
 
