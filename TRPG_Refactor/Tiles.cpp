@@ -33,7 +33,7 @@ Tile::Tile(const AFrame& graphic, std::string order, int x, int y, double size) 
 	x{ x },
 	y{ y },
 	size{ size }
-	{ this->graphic.setScale(this->size); }
+	{ updateInternal(); }
 
 Tile::~Tile() {
 	//animator = NULL;
@@ -42,11 +42,19 @@ Tile::~Tile() {
 void Tile::updatePos(int nx, int ny) {
 	x = nx;
 	y = ny;
+	updateInternal();
 }
 
 void Tile::updateScale(double nsize) {
 	size = nsize;
+	updateInternal();
+}
+
+void Tile::updateInternal() {
 	this->graphic.setScale(this->size);
+	int w{ 0 }, h{ 0 };
+	graphic.getScaledWidthHeight(&w, &h);
+	this->graphic.setXY(this->x * w, this->y * h);
 }
 
 

@@ -172,7 +172,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 			// we assume all the assets are stored as assets\name\name_i.png, where i starts at 0 and increments each time
 			// these i values are used later in the order lists to specify which frames occur in each order
 			img = IMG_Load((assetDir + assetName + "\\" + assetName + "_" + std::to_string(i) + ".png").c_str());
-			printf("%d: Attempted loading asset of name %s, result was %hi\n", i, (assetDir + assetName + "\\" + assetName + "_" + std::to_string(i) + ".png").c_str(), img);
+			//printf("%d: Attempted loading asset of name %s, result was %hi\n", i, (assetDir + assetName + "\\" + assetName + "_" + std::to_string(i) + ".png").c_str(), img);
 			// if the load didn't work, then there shouldn't be any more assets
 			if (img == NULL) {
 				// DEBUG:: print statement
@@ -296,7 +296,7 @@ void Order::drawFrame(int screenX, int screenY, int frame, double otherScale) co
 	SDL_Rect dst;
 	dst.x = screenX + offsets.at(frame).x;
 	dst.y = screenY + offsets.at(frame).y;
-	printf("Preparing to render Frame at %hi...\n", &frames.at(frame));
+	//printf("Preparing to render Frame at %hi...\n", &frames.at(frame));
 	frames.at(frame)->queryWidthHeight(&(dst.w), &(dst.h));
 	dst.w = (int)(dst.w * scale * otherScale);
 	dst.h = (int)(dst.h * scale * otherScale);
@@ -310,6 +310,12 @@ double Order::getMSPerFrame() const {
 
 size_t Order::getLength() const {
 	return frames.size();
+}
+
+void Order::getWidthHeight(int* w, int* h, int frame) const {
+	frames.at(frame)->queryWidthHeight(w, h);
+	*w *= scale;
+	*h *= scale;
 }
 
 
@@ -348,6 +354,10 @@ double AFrame::getOrderMSPerFrame(std::string order) const {
 
 size_t AFrame::getOrderLength(std::string order) const {
 	return orders.at(order).getLength();
+}
+
+void AFrame::getWidthHeight(int* w, int* h, std::string order, int frame) const {
+	orders.at(order).getWidthHeight(w, h, frame);
 }
 
 
@@ -476,6 +486,14 @@ int Sprite::getZlayer() const { return zlayer; }
 void Sprite::setZlayer(int z) { zlayer = z; }
 void Sprite::setScale(double scale) { this->scale = scale; }
 double Sprite::getScale() const { return scale; }
+
+void Sprite::getScaledWidthHeight(int* w, int* h) const {
+	if (w == NULL || h == NULL) return;
+
+	graphics->getWidthHeight(w, h, order, orderPosition);
+	*w *= scale;
+	*h *= scale;
+}
 
 
 

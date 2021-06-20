@@ -139,7 +139,7 @@ int main(int argc, char* args[]) {
 			printf("All sprites set. Preparing Layer test...\n");
 
 			// Layer test
-			// Layer testLayer(animator, assets, basePath + "assets\\testmap1.txt");
+			Layer testLayer(assets, basePath + "assets\\testmap1.txt");
 
 			SDL_Rect* camera = Sprite::getAnimCamera();
 			camera->x = 0;

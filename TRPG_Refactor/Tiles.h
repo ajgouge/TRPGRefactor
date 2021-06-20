@@ -20,6 +20,10 @@ public:
 	void updateScale(double nsize);
 
 private:
+	// bulk update the underlying Sprite
+	// on any other update
+	void updateInternal();
+
 	Sprite graphic;
 	std::string order;
 	int x;

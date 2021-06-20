@@ -58,6 +58,7 @@ public:
 	// basic getters
 	double getMSPerFrame() const;
 	size_t getLength() const;
+	void getWidthHeight(int* w, int* h, int frame) const;
 
 private:
 	double msPerFrame;
@@ -91,6 +92,7 @@ public:
 	// getters
 	double getOrderMSPerFrame(std::string order) const;
 	size_t getOrderLength(std::string order) const;
+	void getWidthHeight(int* w, int* h, std::string order, int frame) const;
 
 private:
 	std::map<std::string, Order> orders;
@@ -229,6 +231,7 @@ public:
 	void setZlayer(int z);
 	void setScale(double scale);
 	double getScale() const;
+	void getScaledWidthHeight(int* w, int* h) const;
 
 private:
 	static AnimationManager animator;
