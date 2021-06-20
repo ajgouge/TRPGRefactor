@@ -127,9 +127,12 @@ private:
 
 // used by Sprites as args for the animation callback. Only spr is used right now as
 // a pointer to the Sprite to update.
-typedef struct {
+typedef struct sca_ {
 	Sprite* spr;
 	SDL_Rect* cam;
+
+	sca_(Sprite* s, SDL_Rect* c) : spr{ s }, cam{ c } {}
+	sca_() : sca_(NULL, NULL) {};
 } SpriteCallbackArg;
 
 /// <summary>
@@ -200,8 +203,9 @@ public:
 		swap(a.orderPosition, b.orderPosition);
 		swap(a.orderLength, b.orderLength);
 		swap(a.flags, b.flags);
-		swap(a.callbackID, b.callbackID);
-		swap(a.callbackArg, b.callbackArg);
+		// NOPE we don't want to swap those!!!
+		//swap(a.callbackID, b.callbackID);
+		//swap(a.callbackArg, b.callbackArg);
 	}
 
 	// Realize this creates a huge problem: Sprites can be constructed

@@ -196,7 +196,7 @@ int main(int argc, char* args[]) {
 				SDL_SetRenderDrawColor(renderer, 50, 20, 20, 255);
 				SDL_RenderClear(renderer);
 
-				printf("Preparing to update Sprites...\n");
+				//printf("Preparing to update Sprites...\n");
 
 				// TODO: Ideally rendering should happen independently of game logic
 				// at some point. One step (though only *one* step!) is putting this
@@ -204,7 +204,7 @@ int main(int argc, char* args[]) {
 				animator.updateSprites();
 				//test.render(camera);
 
-				printf("Done. Rendering backbuffer...\n");
+				//printf("Done. Rendering backbuffer...\n");
 
 				GE_PushFromBackbuffer(renderer, resBuffer, displayHeight, displayWidth);
 

@@ -130,7 +130,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 	// close the file (we won't need it anymore)
 	oFile.close();
 
-	printf("Getting ready to make some regex thingamabobs...\n");
+	//printf("Getting ready to make some regex thingamabobs...\n");
 
 	// this matches a complete asset entry with capture 1 as the name, capture 2 as the default scale (if specified), and capture 3 as the order entries
 	std::regex assetEntry("([A-Za-z0-9_]+)\\s*(?:\\(\\s*([0-9]+(?:\\.[0-9]+)?)\\s*\\))?\\s*:\\s*\\{\\s*([^}]*)\\s*");
@@ -141,14 +141,14 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 	// this matches the ordered x,y pair attached to each element of the CSV (capture 1 is the x offset, capture 2 is the y offset)
 	std::regex orderedPair("\\s*(-?[0-9]+)\\s*,\\s*(-?[0-9]+)\\s*");
 
-	printf("Done. Now making the first iterator...\n");
+	//printf("Done. Now making the first iterator...\n");
 
 	// make a new iterator over the matches
 	std::string s(std::istreambuf_iterator<char>(buf), {});
 
 	std::sregex_iterator assetIterator(s.begin(), s.end(), assetEntry);
 
-	printf("\nPreparing to load all assets...\n");
+	//printf("\nPreparing to load all assets...\n");
 	
 	// iterate thru all of them
 	while (assetIterator != std::sregex_iterator()) {
@@ -158,7 +158,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 		// second capture is scale. If not specified, we default to 1.
 		double assetScale = (assetIterator->str(2).empty()) ? 1 : std::stod(assetIterator->str(2));
 
-		printf("loading assets from folder %s with scale %.1f...\n", assetName.c_str(), assetScale);
+		//printf("loading assets from folder %s with scale %.1f...\n", assetName.c_str(), assetScale);
 
 		// now we load all the textures from the asset directory for this asset
 		SDL_Surface* img = NULL;
@@ -166,7 +166,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 		// since we throw everything into the map first, we keep where in the map we started inserting first
 		// this is for later when we make the Order vectors
 		int baseIndex = nextKey;
-		printf("beginning to load assets...\n");
+		//printf("beginning to load assets...\n");
 		while (true) {
 
 			// we assume all the assets are stored as assets\name\name_i.png, where i starts at 0 and increments each time
@@ -176,7 +176,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 			// if the load didn't work, then there shouldn't be any more assets
 			if (img == NULL) {
 				// DEBUG:: print statement
-				printf("Loaded %d images from directory %s...\n", i, (assetDir + assetName).c_str());
+				//printf("Loaded %d images from directory %s...\n", i, (assetDir + assetName).c_str());
 				break;
 			}
 
@@ -191,7 +191,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 			
 		}
 
-		printf("Done. Preparing a new regex iterator to look at the orders...\n");
+		//printf("Done. Preparing a new regex iterator to look at the orders...\n");
 
 		// the map needs an AFrame, which collects all the order information for us.
 		AFrame assetAFrame{};
@@ -199,7 +199,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 		// more regex yay
 		std::string orderS = assetIterator->str(3);
 		std::sregex_iterator orders(orderS.begin(), orderS.end(), orderEntry);
-		printf("match: %s\n", orderS.c_str());
+		//printf("match: %s\n", orderS.c_str());
 		while (orders != std::sregex_iterator()) {
 
 			// the order name is the first capture
@@ -207,7 +207,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 			// the msperframe is the second capture (not optional)
 			double orderMSPerFrame = std::stod(orders->str(2));
 
-			printf("preparing order %s with msPerFrame = %.1f...\n", orderName.c_str(), orderMSPerFrame);
+			//printf("preparing order %s with msPerFrame = %.1f...\n", orderName.c_str(), orderMSPerFrame);
 
 			// and this buffer will hold pointers to Frames, in the specified order.
 			std::vector<Frame*> orderFrames{};
@@ -217,7 +217,7 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 			// now regex the CSV
 			std::string valueS = orders->str(3);
 			std::sregex_iterator values(valueS.begin(), valueS.end(), orderValue);
-			printf("Loading from CSV %s:\n", valueS.c_str());
+			//printf("Loading from CSV %s:\n", valueS.c_str());
 			while (values != std::sregex_iterator()) {
 				// we push each pointer in the original buffer to this new, order-specific buffer
 				// that "original buffer" starts from some offset at baseIndex, so add that to the
@@ -240,22 +240,22 @@ int AssetManager::loadAssets(SDL_Renderer* renderer, std::string assetDir) {
 			}
 
 			// and we add this order to the AFrame
-			printf("Preparing to emplace Order into AFrame map...\n");
+			//printf("Preparing to emplace Order into AFrame map...\n");
 			assetAFrame.addOrder(orderName, orderMSPerFrame, orderFrames, orderOffsets, assetScale);
 
 			++orders;
 		}
 
 		// now that the AFrame is complete, we add it to the AssetManager's global map of AFrames
-		printf("Preparing to emplace AFrame into asset map...\n");
+		//printf("Preparing to emplace AFrame into asset map...\n");
 		assets.emplace(assetName, assetAFrame);
 
 		++assetIterator;
 
-		printf("Done; moving to next asset...\n\n\n");
+		//printf("Done; moving to next asset...\n\n\n");
 	}
 
-	printf("Done. All assets loaded.\n\n");
+	//printf("Done. All assets loaded.\n\n");
 
 	areTexturesLoaded = true;
 
@@ -367,14 +367,7 @@ void AFrame::getWidthHeight(int* w, int* h, std::string order, int frame) const 
 /// <param name="frames"></param>
 /// <param name="order"></param>
 /// <param name="camera"></param>
-Sprite::Sprite(const AFrame& frames, std::string order) : graphics(&frames), x(0), y(0), order(order), orderPosition(0), flags(0), zlayer(0), scale(1.0) {
-	callbackArg.spr = this;
-	callbackArg.cam = animator.getCamera();
-	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
-	orderLength = frames.getOrderLength(order);
-
-	animator.addSprite(this);
-}
+Sprite::Sprite(const AFrame& frames, std::string order) : Sprite(frames, order, 0, 0, 0, 1.0) {}
 
 /// <summary>
 /// Constructor for Sprite. 
@@ -385,12 +378,20 @@ Sprite::Sprite(const AFrame& frames, std::string order) : graphics(&frames), x(0
 ///  one supplied by your AnimationManager (recommended).</param>
 /// <param name="x"></param>
 /// <param name="y"></param>
-Sprite::Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer, double scale) : graphics(&frames), x(x), y(y), order(order), orderPosition(0), flags(0), zlayer(zlayer), scale(scale) {
-	callbackArg.spr = this;
-	callbackArg.cam = animator.getCamera();
+Sprite::Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer, double scale) : 
+	x{ x },
+	y{ y },
+	zlayer{ zlayer },
+	scale{ scale },
+	graphics{ &frames },
+	order{ order },
+	orderPosition{ 0 },
+	orderLength{frames.getOrderLength(order)},
+	flags{ 0 },
+	callbackID{},
+	callbackArg{this, animator.getCamera()}
+{
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
-	orderLength = frames.getOrderLength(order);
-
 	animator.addSprite(this);
 }
 
@@ -409,24 +410,16 @@ Sprite::Sprite(const Sprite& rhs) :
 	orderLength{rhs.orderLength},
 	flags{rhs.flags},
 	callbackID{},
-	callbackArg{}
+	callbackArg{this, animator.getCamera()}
 {
-
-	callbackArg.spr = this;
-	callbackArg.cam = animator.getCamera();
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	// then register yourself with the animator
 	animator.addSprite(this);
 }
 
 Sprite& Sprite::operator=(Sprite rhs) {
-	SDL_RemoveTimer(callbackID);
-	
 	swap(*this, rhs);
-	callbackArg.spr = this;
-	callbackArg.cam = animator.getCamera();
 
-	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	return *this;
 }
 
