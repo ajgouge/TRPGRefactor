@@ -131,6 +131,42 @@ typedef struct {
 } SpriteCallbackArg;
 
 /// <summary>
+/// AnimationManager -- creates and manages memory used by Sprites, and bulk-renders
+/// all sprites under its control.
+/// </summary>
+class AnimationManager {
+
+public:
+	AnimationManager(Uint32 msPerFrame = 17);
+	~AnimationManager();
+	// creates a new Sprite and adds it to the Manager
+	//Sprite& addSprite(const AFrame& graphics, std::string order);
+	// the Sprite copy methods use this one once they're done. TODO: encapsulate;
+	// there's no reason for the user to call this
+	void addSprite(const Sprite& s);
+	// call this once per loop to render all Sprites this Manager manages
+	void updateSprites() const;
+	void removeSprite(Sprite& sprite);
+	// the memory address of the camera is unchanged after this operation (TODO: probably bad)
+	void setCamera(SDL_Rect* camera);
+	SDL_Rect* getCamera() const;
+
+	//static Uint32 callback_render(Uint32 interval, void* sp);
+
+private:
+	// new design!! yay
+	// AnimationManagers now only store addresses of
+	// managed Sprite memory, and Sprites will auto
+	// add and remove themselves as necessary. should
+	// fix everything lol
+	std::list<const Sprite*> sprites;
+	SDL_Rect* camera;
+	//SDL_TimerID callbackID;
+	Uint32 msPerUpdate;
+
+};
+
+/// <summary>
 /// Sprite -- a container for an AFrame and other rendering data. Automatically
 /// updates the animation frame rendered to the screen via an SDL_Timer callback.
 /// </summary>
@@ -138,8 +174,8 @@ class Sprite {
 
 public:
 	// x and y default to 0 in this case
-	Sprite(const AFrame& frames, std::string order, SDL_Rect* camera);
-	Sprite(const AFrame& frames, std::string order, SDL_Rect* camera, int x, int y, int zlayer, double scale);
+	Sprite(const AFrame& frames, std::string order);
+	Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer, double scale);
 	~Sprite();
 
 	// Because Sprite has a non-static reference memeber, it doesn't
@@ -157,9 +193,7 @@ public:
 		swap(a.y, b.y);
 		swap(a.zlayer, b.zlayer);
 		swap(a.scale, b.scale);
-		// this wasn't working with const AFrame& (shocker) so i un-const them
-		// we'll see if that causes issues TODO: find out i guess
-		// swap(a.graphics, b.graphics);
+		swap(a.graphics, b.graphics);
 		swap(a.order, b.order);
 		swap(a.orderPosition, b.orderPosition);
 		swap(a.orderLength, b.orderLength);
@@ -173,13 +207,14 @@ public:
 	// we make the AnimationManager a static member of the Sprite class,
 	// then the Sprites can register themselves. Problem solved!
 	static AnimationManager& getAnimator() { return animator; }
+	static SDL_Rect* getAnimCamera() { return animator.getCamera(); }
 	// Ignore all the extra problems this causes, like how to even
 	// instantiate this thing in the first place ;)
 
 	// renders the Sprite using the given camera (TODO: is that right?)
 	void render(SDL_Rect* camera) const;
 	// called by the SDL_Timer to update the animation frame
-	static Uint32 callback_render(Uint32 interval, void* camera);
+	static Uint32 callback_render(Uint32 interval, void* sp);
 	// getters and setters
 	SpriteCallbackArg* getCallbackArg();
 	void setX(int newX);
@@ -202,7 +237,11 @@ private:
 	int y;
 	int zlayer;
 	double scale;
-	const AFrame& graphics;
+	// Even though I don't plan on changing
+	// it, making this a const & is problematic
+	// b/c of copy assignment so we make it a const
+	// * instead
+	const AFrame* graphics;
 	std::string order;
 	int orderPosition;
 	size_t orderLength;
@@ -210,37 +249,6 @@ private:
 	int flags;
 	SDL_TimerID callbackID;
 	SpriteCallbackArg callbackArg;
-
-};
-
-/// <summary>
-/// AnimationManager -- creates and manages memory used by Sprites, and bulk-renders
-/// all sprites under its control.
-/// </summary>
-class AnimationManager {
-
-public:
-	AnimationManager();
-	~AnimationManager();
-	// creates a new Sprite and adds it to the Manager
-	Sprite& addSprite(const AFrame& graphics, std::string order);
-	// the Sprite copy methods use this one once they're done. TODO: encapsulate;
-	// there's no reason for the user to call this
-	Sprite& addSprite(const Sprite& s);
-	// call this once per loop to render all Sprites this Manager manages
-	void updateSprites();
-	void removeSprite(Sprite& sprite);
-	// the memory address of the camera is unchanged after this operation (TODO: probably bad)
-	void setCamera(SDL_Rect* camera);
-	SDL_Rect* getCamera();
-
-private:
-	// this is *essentially* a vector with extra steps. However, it offers something a vector
-	// cannot -- insertions don't have the potential to invalidate all references. YAY!
-	// Note: this being a vector was a huge source of bugs for a while because it would
-	// reallocate and clobber all the references that other objects were using. ugh
-	std::list<Sprite> sprites;
-	SDL_Rect* camera;
 
 };
 

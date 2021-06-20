@@ -27,9 +27,8 @@ FrameOrder::FrameOrder(const AFrame& frame, std::string order) :
 	frame{ frame },
 	order{ order } {}
 
-Tile::Tile(AnimationManager& animator, const AFrame& graphic, std::string order, int x, int y, double size) :
-	animator{ animator },
-	graphic{ animator.addSprite(graphic,order) },
+Tile::Tile(const AFrame& graphic, std::string order, int x, int y, double size) :
+	graphic{graphic, order},
 	order{ order },
 	x{ x },
 	y{ y },
@@ -37,7 +36,6 @@ Tile::Tile(AnimationManager& animator, const AFrame& graphic, std::string order,
 	{ this->graphic.setScale(this->size); }
 
 Tile::~Tile() {
-	animator.removeSprite(graphic);
 	//animator = NULL;
 }
 
@@ -53,8 +51,7 @@ void Tile::updateScale(double nsize) {
 
 
 
-Layer::Layer(AnimationManager& animator, AssetManager& assets, std::string mappath, double scale) :
-	animator{ animator },
+Layer::Layer(AssetManager& assets, std::string mappath, double scale) :
 	assets{ assets },
 	map{ },
 	width{ },
@@ -162,12 +159,12 @@ bool Layer::loadMap(std::string mappath) {
 			FrameOrder thisFrame = palette.at(std::stoi(entryBuf));
 			// we now know enough to make our Tile for this position
 			//Tile k();
-			row.emplace_back(this->animator, thisFrame.frame, thisFrame.order, j, i, scale);
+			row.emplace_back(thisFrame.frame, thisFrame.order, j, i, scale);
 		}
 		// grab our last index and make the Tile
 		mapFile.getline(entryBuf, MAPR_TILE_SIZE);
 		FrameOrder thisFrame = palette.at(std::stoi(entryBuf));
-		Tile k(this->animator, thisFrame.frame, thisFrame.order, this->width - 1, i, scale);
+		Tile k{ thisFrame.frame, thisFrame.order, this->width - 1, i, scale };
 		row.push_back(k);
 		// this row is complete; push it to the complete map and continue
 		map.push_back(row);

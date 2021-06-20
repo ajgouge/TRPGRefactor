@@ -66,37 +66,38 @@ int main(int argc, char* args[]) {
 				return -1;
 			}
 
-			AnimationManager animator;
-			std::vector<std::reference_wrapper<Sprite>> sprites;
+			std::vector<Sprite> sprites;
 
 			printf("Assets loaded. Preparing to create Sprites...\n");
 			
-			Sprite& test = animator.addSprite(assets.getAFrame("anti_air"),"idle");
+			//Sprite test{ assets.getAFrame("anti_air"), "idle" };
 
-			printf("Sprite created with scale %lf.\n", test.getScale());
+			//printf("Sprite created with scale %lf.\n", test.getScale());
 			//printf("If you see this, the error is very strange...\n");
-			/*sprites.push_back(animator.addSprite(assets.getAFrame("apc"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("artillery"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("battle_copter"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("battleship"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("bomber"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("carrier"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("cruiser"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("fighter"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("heavy_tank"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("hidden_stealth_fighter"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("infantry"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("lander"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("light_tank"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("mech"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("medium_tank"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("missile"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("recon"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("rocket"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("stealth_fighter"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("submarine"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("submerged_submarine"),"idle"));
-			sprites.push_back(animator.addSprite(assets.getAFrame("transport_copter"),"idle"));
+			
+			sprites.emplace_back(assets.getAFrame("anti_air"), "idle");
+			sprites.emplace_back(assets.getAFrame("apc"),"idle");
+			sprites.emplace_back(assets.getAFrame("artillery"),"idle");
+			sprites.emplace_back(assets.getAFrame("battle_copter"),"idle");
+			sprites.emplace_back(assets.getAFrame("battleship"),"idle");
+			sprites.emplace_back(assets.getAFrame("bomber"),"idle");
+			sprites.emplace_back(assets.getAFrame("carrier"),"idle");
+			sprites.emplace_back(assets.getAFrame("cruiser"),"idle");
+			sprites.emplace_back(assets.getAFrame("fighter"),"idle");
+			sprites.emplace_back(assets.getAFrame("heavy_tank"),"idle");
+			sprites.emplace_back(assets.getAFrame("hidden_stealth_fighter"),"idle");
+			sprites.emplace_back(assets.getAFrame("infantry"),"idle");
+			sprites.emplace_back(assets.getAFrame("lander"),"idle");
+			sprites.emplace_back(assets.getAFrame("light_tank"),"idle");
+			sprites.emplace_back(assets.getAFrame("mech"),"idle");
+			sprites.emplace_back(assets.getAFrame("medium_tank"),"idle");
+			sprites.emplace_back(assets.getAFrame("missile"),"idle");
+			sprites.emplace_back(assets.getAFrame("recon"),"idle");
+			sprites.emplace_back(assets.getAFrame("rocket"),"idle");
+			sprites.emplace_back(assets.getAFrame("stealth_fighter"),"idle");
+			sprites.emplace_back(assets.getAFrame("submarine"),"idle");
+			sprites.emplace_back(assets.getAFrame("submerged_submarine"),"idle");
+			sprites.emplace_back(assets.getAFrame("transport_copter"),"idle");
 
 			sprites[1].setX(64);
 			sprites[2].setX(128);
@@ -133,14 +134,14 @@ int main(int argc, char* args[]) {
 			sprites[19].setY(128);
 			sprites[20].setY(128);
 			sprites[21].setY(192);
-			sprites[22].setY(192);*/
+			sprites[22].setY(192);
 
 			printf("All sprites set. Preparing Layer test...\n");
 
 			// Layer test
 			// Layer testLayer(animator, assets, basePath + "assets\\testmap1.txt");
 
-			SDL_Rect* camera = animator.getCamera();
+			SDL_Rect* camera = Sprite::getAnimCamera();
 			camera->x = 0;
 			camera->y = 0;
 			camera->w = SCREEN_WIDTH;
@@ -150,6 +151,11 @@ int main(int argc, char* args[]) {
 			int displayHeight = SCREEN_HEIGHT, displayWidth = SCREEN_WIDTH;
 
 			SDL_SetRenderTarget(renderer, resBuffer);
+
+			// TODO: the goal is to make this class invisible to
+			// the caller. That will come with removing rendering
+			// from the game loop and putting it somewhere else!
+			AnimationManager& animator{ Sprite::getAnimator() };
 
 			while (true) {
 				// poll event
@@ -169,8 +175,11 @@ int main(int argc, char* args[]) {
 
 				printf("Preparing to update Sprites...\n");
 
-				//animator.updateSprites();
-				test.render(camera);
+				// TODO: Ideally rendering should happen independently of game logic
+				// at some point. One step (though only *one* step!) is putting this
+				// into an SDL_Timer callback.
+				animator.updateSprites();
+				//test.render(camera);
 
 				printf("Done. Rendering backbuffer...\n");
 

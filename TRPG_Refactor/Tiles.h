@@ -14,14 +14,13 @@
 class Tile {
 	
 public:
-	Tile(AnimationManager& animator, const AFrame& graphic, std::string order, int x, int y, double size);
+	Tile(const AFrame& graphic, std::string order, int x, int y, double size);
 	~Tile();
 	void updatePos(int nx, int ny);
 	void updateScale(double nsize);
 
 private:
-	AnimationManager& animator;
-	Sprite& graphic;
+	Sprite graphic;
 	std::string order;
 	int x;
 	int y;
@@ -64,7 +63,7 @@ public:
 class Layer {
 
 public:
-	Layer(AnimationManager& animator, AssetManager& assets, std::string mappath, double scale = 1);
+	Layer(AssetManager& assets, std::string mappath, double scale = 1);
 	~Layer();
 	//void setVisible(bool isVisible);
 	//void updateTile(int x, int y, std::string asset, std::string order);
@@ -72,7 +71,6 @@ public:
 
 private:
 	bool loadMap(std::string mappath);
-	AnimationManager& animator;
 	AssetManager& assets;
 	std::vector< std::vector<Tile> > map;
 	int width, height; // in Tiles, not pixels

@@ -357,11 +357,13 @@ size_t AFrame::getOrderLength(std::string order) const {
 /// <param name="frames"></param>
 /// <param name="order"></param>
 /// <param name="camera"></param>
-Sprite::Sprite(const AFrame& frames, std::string order, SDL_Rect* camera) : graphics(frames), x(0), y(0), order(order), orderPosition(0), flags(0), zlayer(0), scale(1.0) {
+Sprite::Sprite(const AFrame& frames, std::string order) : graphics(&frames), x(0), y(0), order(order), orderPosition(0), flags(0), zlayer(0), scale(1.0) {
 	callbackArg.spr = this;
-	callbackArg.cam = camera;
-	callbackID = SDL_AddTimer((Uint32)graphics.getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
+	callbackArg.cam = animator.getCamera();
+	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	orderLength = frames.getOrderLength(order);
+
+	animator.addSprite(*this);
 }
 
 /// <summary>
@@ -373,11 +375,13 @@ Sprite::Sprite(const AFrame& frames, std::string order, SDL_Rect* camera) : grap
 ///  one supplied by your AnimationManager (recommended).</param>
 /// <param name="x"></param>
 /// <param name="y"></param>
-Sprite::Sprite(const AFrame& frames, std::string order, SDL_Rect* camera, int x, int y, int zlayer, double scale) : graphics(frames), x(x), y(y), order(order), orderPosition(0), flags(0), zlayer(zlayer), scale(scale) {
+Sprite::Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer, double scale) : graphics(&frames), x(x), y(y), order(order), orderPosition(0), flags(0), zlayer(zlayer), scale(scale) {
 	callbackArg.spr = this;
-	callbackArg.cam = camera;
-	callbackID = SDL_AddTimer((Uint32)graphics.getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
+	callbackArg.cam = animator.getCamera();
+	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	orderLength = frames.getOrderLength(order);
+
+	animator.addSprite(*this);
 }
 
 // Here we initialize the AnimationManager that every Sprite will use. Unfortunately this means we
@@ -394,15 +398,21 @@ Sprite::Sprite(const Sprite& rhs) :
 	orderPosition{rhs.orderPosition},
 	orderLength{rhs.orderLength},
 	flags{rhs.flags},
-	callbackID{rhs.callbackID},
-	callbackArg{rhs.callbackArg}
+	callbackID{},
+	callbackArg{}
 {
+	callbackArg.spr = this;
+	callbackArg.cam = animator.getCamera();
+	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	// then register yourself with the animator
 	animator.addSprite(*this);
 }
 
 Sprite& Sprite::operator=(Sprite rhs) {
 	swap(*this, rhs);
+	callbackArg.spr = this;
+	callbackArg.cam = animator.getCamera();
+	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	return *this;
 }
 
@@ -424,7 +434,7 @@ Sprite::~Sprite() {
 /// <param name="camera">The camera to use (?) for rendering.</param>
 void Sprite::render(SDL_Rect* camera) const {
 	//printf("Drawing sprite order %s at %d,%d...\n", order.c_str(), x, y);
-	graphics.draw(x - camera->x, y - camera->y, order, orderPosition, scale);
+	graphics->draw(x - camera->x, y - camera->y, order, orderPosition, scale);
 }
 
 /// <summary>
@@ -471,13 +481,16 @@ double Sprite::getScale() const { return scale; }
 
 /// <summary>
 /// Inits a new AnimationManager with a default camera, being all 0's.
+/// Defaults to a render rate of every 17ms (a little over 60fps)
 /// </summary>
-AnimationManager::AnimationManager() {
+AnimationManager::AnimationManager(Uint32 msPerUpdate) {
 	camera = new SDL_Rect;
 	camera->x = 0;
 	camera->y = 0;
 	camera->h = 0;
 	camera->w = 0;
+	this->msPerUpdate = msPerUpdate;
+	//callbackID = SDL_AddTimer(msPerUpdate, AnimationManager::callback_render, this);
 }
 
 /// <summary>
@@ -487,6 +500,7 @@ AnimationManager::~AnimationManager() {
 	//for (Sprite e : sprites) {
 	//	delete e;
 	//}
+	//SDL_RemoveTimer(callbackID);
 	delete camera;
 }
 
@@ -497,47 +511,52 @@ AnimationManager::~AnimationManager() {
 /// <param name="graphics"></param>
 /// <param name="order"></param>
 /// <returns></returns>
-Sprite& AnimationManager::addSprite(const AFrame& graphics, std::string order) {
-	sprites.emplace_back(graphics, order, camera);
-	// TODO: Is this render call problematic, or necessary? (i'm removing it so we'll see lol)
-	// sprite->render(camera);
-	return sprites.back();
-}
+//Sprite& AnimationManager::addSprite(const AFrame& graphics, std::string order) {
+//	sprites.emplace_back(graphics, order, camera);
+//	// TODO: Is this render call problematic, or necessary? (i'm removing it so we'll see lol)
+//	// sprite->render(camera);
+//	return sprites.back();
+//}
 
 // TODO: this might not be necessary now? idk
-Sprite& AnimationManager::addSprite(const Sprite& s) {
+void AnimationManager::addSprite(const Sprite& s) {
 	// welp i realize one of the big problems now
 	// these two lines of code are so obviously not what i want, but it's all i can do
 	// we need AnimationManager to store THE Sprite data, not copies
 	// or something else, idk
-	sprites.push_back(s);
-	return sprites.back();
+	sprites.push_back(&s);
+	return;
 }
 
 /// <summary>
 /// Renders all the Sprites managed by this AnimationManager. Call this once in your main loop.
 /// Renders everything in z stages. Lower z values render first.
 /// </summary>
-void AnimationManager::updateSprites() {
-
+void AnimationManager::updateSprites() const {
+	
 	// make a compare lambda for the PQ
-	auto compare = [](Sprite left, Sprite right) {
+	auto compare = [](const Sprite* left, const Sprite* right) {
 		// false if left >= right, otherwise true
 		// (that has to be not >=, since comp(a,a) must be false)
-		return !(left.getZlayer() >= right.getZlayer());
+		return !(left->getZlayer() >= right->getZlayer());
 	};
 	// we use a list internally here; TODO: make sure this doesn't break
 	// anything b/c copy assignment or smth
-	std::priority_queue<Sprite, std::vector<Sprite>, decltype(compare)> heap(compare);
+	std::priority_queue<const Sprite*, std::deque<const Sprite*>, decltype(compare)> heap(compare);
 
 	// push everything by zorder
-	for (auto e : sprites) {
+	for (const Sprite* e : sprites) {
 		heap.push(e);
 	}
+	
+	//for (auto i{ sprites.begin() }; i != sprites.end(); ++i) {
+	//	Sprite e{ *i };
+	//	heap.push(e);
+	//}
 
 	// then render in zorder
 	while (!heap.empty()) {
-		(heap.top()).render(camera);
+		heap.top()->render(camera);
 		heap.pop();
 	}
 
@@ -555,11 +574,9 @@ void AnimationManager::removeSprite(Sprite& sprite) {
 	// but doing [&sprite] gives a ref and [sprite] makes a copy
 	Sprite* addressToCheckFor = &sprite;
 	// this way we remove the same Sprite we were passed
-	sprites.remove_if([addressToCheckFor](const Sprite& s) {
-		return &s == addressToCheckFor;
+	sprites.remove_if([addressToCheckFor](const Sprite* s) {
+		return s == addressToCheckFor;
 		});
-
-	// note: now the user's reference is dangling. dont use it!
 	return;
 	
 	/*int i = 0;
@@ -587,7 +604,17 @@ void AnimationManager::setCamera(SDL_Rect* camera) {
 	this->camera->w = camera->w;
 	this->camera->h = camera->h;
 }
-SDL_Rect* AnimationManager::getCamera() { return camera; }
+SDL_Rect* AnimationManager::getCamera() const { return camera; }
+
+/*Uint32 AnimationManager::callback_render(Uint32 interval, void* sp) {
+
+	((AnimationManager*)sp)->updateSprites();
+
+	//printf("Callback from sprite %hi updated to order position %i of %i.\n", args->spr, args->spr->orderPosition, args->spr->orderLength - 1);
+	//args->spr->render(args->cam);
+
+	return interval;
+}*/
 
 /// <summary>
 /// Helper function. Call this in the main loop instead of SDL_RenderPresent.
