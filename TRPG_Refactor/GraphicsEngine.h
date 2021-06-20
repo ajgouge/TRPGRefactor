@@ -145,10 +145,10 @@ public:
 	//Sprite& addSprite(const AFrame& graphics, std::string order);
 	// the Sprite copy methods use this one once they're done. TODO: encapsulate;
 	// there's no reason for the user to call this
-	void addSprite(const Sprite& s);
+	void addSprite(const Sprite* s);
 	// call this once per loop to render all Sprites this Manager manages
 	void updateSprites() const;
-	void removeSprite(Sprite& sprite);
+	void removeSprite(const Sprite* sprite);
 	// the memory address of the camera is unchanged after this operation (TODO: probably bad)
 	void setCamera(SDL_Rect* camera);
 	SDL_Rect* getCamera() const;

@@ -183,3 +183,8 @@ bool Layer::loadMap(std::string mappath) {
 	return true;
 
 }
+
+void Layer::updateTile(int x, int y, std::string asset, std::string order) {
+	Tile t{ assets.getAFrame(asset), order, x, y, map[y][x].getScale() };
+	map[y][x] = t;
+}

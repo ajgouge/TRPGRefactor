@@ -373,7 +373,7 @@ Sprite::Sprite(const AFrame& frames, std::string order) : graphics(&frames), x(0
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	orderLength = frames.getOrderLength(order);
 
-	animator.addSprite(*this);
+	animator.addSprite(this);
 }
 
 /// <summary>
@@ -391,7 +391,7 @@ Sprite::Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	orderLength = frames.getOrderLength(order);
 
-	animator.addSprite(*this);
+	animator.addSprite(this);
 }
 
 // Here we initialize the AnimationManager that every Sprite will use. Unfortunately this means we
@@ -411,17 +411,21 @@ Sprite::Sprite(const Sprite& rhs) :
 	callbackID{},
 	callbackArg{}
 {
+
 	callbackArg.spr = this;
 	callbackArg.cam = animator.getCamera();
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	// then register yourself with the animator
-	animator.addSprite(*this);
+	animator.addSprite(this);
 }
 
 Sprite& Sprite::operator=(Sprite rhs) {
+	SDL_RemoveTimer(callbackID);
+	
 	swap(*this, rhs);
 	callbackArg.spr = this;
 	callbackArg.cam = animator.getCamera();
+
 	callbackID = SDL_AddTimer((Uint32)graphics->getOrderMSPerFrame(order), Sprite::callback_render, &callbackArg);
 	return *this;
 }
@@ -432,7 +436,8 @@ Sprite& Sprite::operator=(Sprite rhs) {
 /// </summary>
 Sprite::~Sprite() {
 	SDL_RemoveTimer(callbackID);
-	animator.removeSprite(*this);
+	animator.removeSprite(this);
+	callbackArg.spr = NULL;
 }
 
 /// <summary>
@@ -537,12 +542,12 @@ AnimationManager::~AnimationManager() {
 //}
 
 // TODO: this might not be necessary now? idk
-void AnimationManager::addSprite(const Sprite& s) {
+void AnimationManager::addSprite(const Sprite* s) {
 	// welp i realize one of the big problems now
 	// these two lines of code are so obviously not what i want, but it's all i can do
 	// we need AnimationManager to store THE Sprite data, not copies
 	// or something else, idk
-	sprites.push_back(&s);
+	sprites.push_back(s);
 	return;
 }
 
@@ -587,13 +592,13 @@ void AnimationManager::updateSprites() const {
 /// it, so be sure to throw it away once you're done.
 /// </summary>
 /// <param name="sprite"></param>
-void AnimationManager::removeSprite(Sprite& sprite) {
+void AnimationManager::removeSprite(const Sprite* sprite) {
 	// this is a hack lol, i wanted to capture the address
 	// but doing [&sprite] gives a ref and [sprite] makes a copy
-	Sprite* addressToCheckFor = &sprite;
+	// Sprite* addressToCheckFor = sprite;
 	// this way we remove the same Sprite we were passed
-	sprites.remove_if([addressToCheckFor](const Sprite* s) {
-		return s == addressToCheckFor;
+	sprites.remove_if([sprite](const Sprite* s) {
+		return s == sprite;
 		});
 	return;
 	

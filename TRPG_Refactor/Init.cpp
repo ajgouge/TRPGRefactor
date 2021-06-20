@@ -157,6 +157,29 @@ int main(int argc, char* args[]) {
 			// from the game loop and putting it somewhere else!
 			AnimationManager& animator{ Sprite::getAnimator() };
 
+			// quick testing block
+			{
+				SDL_SetRenderDrawColor(renderer, 50, 20, 20, 255);
+				SDL_RenderClear(renderer);
+
+				printf("Preparing to update Sprites...\n");
+
+				// TODO: Ideally rendering should happen independently of game logic
+				// at some point. One step (though only *one* step!) is putting this
+				// into an SDL_Timer callback.
+				animator.updateSprites();
+				//test.render(camera);
+
+				printf("Done. Rendering backbuffer...\n");
+
+				GE_PushFromBackbuffer(renderer, resBuffer, displayHeight, displayWidth);
+
+				//SDL_Delay(1000);
+
+				testLayer.updateTile(2, 3, "grass0", "idle");
+
+			}
+
 			while (true) {
 				// poll event
 				SDL_Event event;

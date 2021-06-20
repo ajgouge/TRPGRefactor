@@ -18,6 +18,7 @@ public:
 	~Tile();
 	void updatePos(int nx, int ny);
 	void updateScale(double nsize);
+	double getScale() const { return size; }
 
 private:
 	// bulk update the underlying Sprite
@@ -70,12 +71,13 @@ public:
 	Layer(AssetManager& assets, std::string mappath, double scale = 1);
 	~Layer();
 	//void setVisible(bool isVisible);
-	//void updateTile(int x, int y, std::string asset, std::string order);
+	void updateTile(int x, int y, std::string asset, std::string order);
 	//void setZLayer(int zlayer);
 
 private:
 	bool loadMap(std::string mappath);
 	AssetManager& assets;
+	// index this [y][x]
 	std::vector< std::vector<Tile> > map;
 	int width, height; // in Tiles, not pixels
 	int zlayer;

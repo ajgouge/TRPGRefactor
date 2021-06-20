@@ -1,0 +1,12 @@
+20 10
+
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 
+grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0 grass0

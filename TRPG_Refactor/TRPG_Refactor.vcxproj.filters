@@ -33,4 +33,352 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\anti_air\anti_air_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\anti_air\anti_air_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\anti_air\anti_air_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\anti_air\anti_air_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\apc\apc_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\apc\apc_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\apc\apc_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\apc\apc_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\artillery\artillery_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\artillery\artillery_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\artillery\artillery_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\artillery\artillery_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\battle_copter\battle_copter_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\battle_copter\battle_copter_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\battle_copter\battle_copter_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\battle_copter\battle_copter_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\battleship\battleship_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\battleship\battleship_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\battleship\battleship_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\battleship\battleship_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\bomber\bomber_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\bomber\bomber_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\bomber\bomber_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\bomber\bomber_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\carrier\carrier_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\carrier\carrier_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\carrier\carrier_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\carrier\carrier_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\cruiser\cruiser_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\cruiser\cruiser_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\cruiser\cruiser_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\cruiser\cruiser_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\fighter\fighter_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\fighter\fighter_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\fighter\fighter_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\fighter\fighter_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\grass0\grass0_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\grass0\grass0_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\heavy_tank\heavy_tank_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\heavy_tank\heavy_tank_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\heavy_tank\heavy_tank_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\heavy_tank\heavy_tank_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hidden_stealth_fighter\hidden_stealth_fighter_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hidden_stealth_fighter\hidden_stealth_fighter_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hidden_stealth_fighter\hidden_stealth_fighter_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hidden_stealth_fighter\hidden_stealth_fighter_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\1-2 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\1-2 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\3-4 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\3-4 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\5-6 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\5-6 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\7-8 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\7-8 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\9-10 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\9-10 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\11-12 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\11-12 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\13-14 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\13-14 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\15-16 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\15-16 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\17-18 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\17-18 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\19-20 hp blue.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\hp\19-20 hp red.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\infantry\infantry_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\infantry\infantry_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\infantry\infantry_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\infantry\infantry_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\lander\lander_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\lander\lander_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\lander\lander_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\lander\lander_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\light_tank\light_tank_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\light_tank\light_tank_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\light_tank\light_tank_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\light_tank\light_tank_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\mech\mech_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\mech\mech_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\mech\mech_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\mech\mech_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\medium_tank\medium_tank_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\medium_tank\medium_tank_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\medium_tank\medium_tank_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\medium_tank\medium_tank_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\missile\missile_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\missile\missile_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\missile\missile_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\missile\missile_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\recon\recon_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\recon\recon_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\recon\recon_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\recon\recon_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\rocket\rocket_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\rocket\rocket_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\rocket\rocket_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\rocket\rocket_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\stealth_fighter\stealth_fighter_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\stealth_fighter\stealth_fighter_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\stealth_fighter\stealth_fighter_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\stealth_fighter\stealth_fighter_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\submarine\submarine_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\submarine\submarine_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\submarine\submarine_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\submarine\submarine_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\submerged_submarine\submerged_submarine_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\submerged_submarine\submerged_submarine_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\submerged_submarine\submerged_submarine_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\submerged_submarine\submerged_submarine_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\transport_copter\transport_copter_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\transport_copter\transport_copter_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\transport_copter\transport_copter_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\transport_copter\transport_copter_3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="assets\objects.txt" />
+    <Text Include="assets\testmap1.txt" />
+  </ItemGroup>
 </Project>
