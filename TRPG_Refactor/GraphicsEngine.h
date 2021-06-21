@@ -20,7 +20,6 @@ class AnimationManager;
 class Frame {
 
 public:
-	//Frame();
 	Frame(SDL_Renderer* renderer, SDL_Texture* graphic);
 	// Frees the SDL_Texture ONLY, not the renderer
 	~Frame();
@@ -52,7 +51,7 @@ class Order {
 
 public:
 	Order(double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale);
-	~Order();
+	~Order() = default;
 	// calls the appropriate Frame::render() function of this order
 	void drawFrame(int screenX, int screenY, int frame, double otherScale) const;
 	// basic getters
@@ -83,8 +82,8 @@ private:
 class AFrame {
 
 public:
-	AFrame();
-	~AFrame();
+	AFrame() = default;
+	~AFrame() = default;
 	// calls the Order::draw function on the given order
 	void draw(int screenX, int screenY, std::string order, int frame, double otherScale) const;
 	// creates and adds a new order
@@ -107,7 +106,7 @@ class AssetManager {
 
 public:
 	AssetManager();
-	~AssetManager();
+	~AssetManager() = default;
 	// call this before using the AssetManager for anything
 	int loadAssets(SDL_Renderer* renderer, std::string assetDir);
 	// use this to supply AFrames for your Sprites. AFrames should
@@ -144,8 +143,6 @@ class AnimationManager {
 public:
 	AnimationManager(Uint32 msPerFrame = 17);
 	~AnimationManager();
-	// creates a new Sprite and adds it to the Manager
-	//Sprite& addSprite(const AFrame& graphics, std::string order);
 	// the Sprite copy methods use this one once they're done. TODO: encapsulate;
 	// there's no reason for the user to call this
 	void addSprite(const Sprite* s);
@@ -179,8 +176,8 @@ class Sprite {
 
 public:
 	// x and y default to 0 in this case
-	Sprite(const AFrame& frames, std::string order);
-	Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer, double scale);
+	Sprite(const AFrame& frames, std::string order, bool isVisible = true);
+	Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer, double scale, bool isVisible = true);
 	~Sprite();
 
 	// Because Sprite has a non-static reference memeber, it doesn't
@@ -203,6 +200,7 @@ public:
 		swap(a.orderPosition, b.orderPosition);
 		swap(a.orderLength, b.orderLength);
 		swap(a.flags, b.flags);
+		swap(a.isVisible, b.isVisible);
 		// NOPE we don't want to swap those!!!
 		//swap(a.callbackID, b.callbackID);
 		//swap(a.callbackArg, b.callbackArg);
@@ -236,6 +234,8 @@ public:
 	void setScale(double scale);
 	double getScale() const;
 	void getScaledWidthHeight(int* w, int* h) const;
+	void setVisible(bool isVisible);
+	bool getVisible() const { return isVisible; }
 
 private:
 	static AnimationManager animator;
@@ -254,6 +254,7 @@ private:
 	size_t orderLength;
 	// currently unused, but should basically be user data
 	int flags;
+	bool isVisible;
 	SDL_TimerID callbackID;
 	SpriteCallbackArg callbackArg;
 

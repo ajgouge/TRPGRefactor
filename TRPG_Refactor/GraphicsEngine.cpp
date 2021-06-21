@@ -13,11 +13,6 @@
 
 #include "GraphicsEngine.h"
 
-//Frame::Frame() {
-//	renderer = NULL;
-//	texture = NULL;
-//}
-
 /// <summary>
 /// The basic Frame constructor you should always use.
 /// </summary>
@@ -90,17 +85,6 @@ void Frame::render(SDL_Rect* dst) const {
 /// AssetManager constructor; doesn't actually do much. Call loadAssets before using.
 /// </summary>
 AssetManager::AssetManager() { areTexturesLoaded = false; nextKey = 0; }
-
-/// <summary>
-/// AssetManager destructor. DELETES all internal frames! You don't have to do that yourself!
-/// </summary>
-AssetManager::~AssetManager() {
-	/*if (areTexturesLoaded) {
-		for (Frame* e : frames) {
-			delete e;
-		}
-	}*/
-}
 
 /// <summary>
 /// This is what actually inits the AssetManager, now with a useful(ish) return!
@@ -281,9 +265,11 @@ const AFrame& AssetManager::getAFrame(std::string key) {
 /// <param name="frames">This should be all the frames, IN ORDER.</param>
 /// <param name="offsets">And these are the offsets, in the same order as frames.</param>
 /// <param name="scale">Each frame will be scaled up or down by this amount. Leave 1.0 for no scaling.</param>
-Order::Order(double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) : msPerFrame(msPerFrame), frames(frames), offsets(offsets), scale(scale) {}
-
-Order::~Order() {}
+Order::Order(double msPerFrame, std::vector<Frame*> frames, std::vector<SDL_Point> offsets, double scale) : 
+	msPerFrame(msPerFrame), 
+	frames(frames), 
+	offsets(offsets), 
+	scale(scale) {}
 
 /// <summary>
 /// Renders the requested frame in the order at the given coordinates.
@@ -319,10 +305,6 @@ void Order::getWidthHeight(int* w, int* h, int frame) const {
 }
 
 
-
-AFrame::AFrame() {}
-
-AFrame::~AFrame() {}
 
 /// <summary>
 /// Renders the requested Frame of the given Order at the given coordinates.
@@ -367,7 +349,7 @@ void AFrame::getWidthHeight(int* w, int* h, std::string order, int frame) const 
 /// <param name="frames"></param>
 /// <param name="order"></param>
 /// <param name="camera"></param>
-Sprite::Sprite(const AFrame& frames, std::string order) : Sprite(frames, order, 0, 0, 0, 1.0) {}
+Sprite::Sprite(const AFrame& frames, std::string order, bool isVisible) : Sprite(frames, order, 0, 0, 0, 1.0, isVisible) {}
 
 /// <summary>
 /// Constructor for Sprite. 
@@ -378,7 +360,7 @@ Sprite::Sprite(const AFrame& frames, std::string order) : Sprite(frames, order, 
 ///  one supplied by your AnimationManager (recommended).</param>
 /// <param name="x"></param>
 /// <param name="y"></param>
-Sprite::Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer, double scale) : 
+Sprite::Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer, double scale, bool isVisible) : 
 	x{ x },
 	y{ y },
 	zlayer{ zlayer },
@@ -388,6 +370,7 @@ Sprite::Sprite(const AFrame& frames, std::string order, int x, int y, int zlayer
 	orderPosition{ 0 },
 	orderLength{frames.getOrderLength(order)},
 	flags{ 0 },
+	isVisible{ isVisible },
 	callbackID{},
 	callbackArg{this, animator.getCamera()}
 {
@@ -401,14 +384,15 @@ AnimationManager Sprite::animator{};
 
 Sprite::Sprite(const Sprite& rhs) :
 	x{ rhs.x },
-	y{rhs.y},
-	zlayer{rhs.zlayer},
-	scale{rhs.scale},
-	graphics{rhs.graphics}, // should be ok?
-	order{rhs.order},
-	orderPosition{rhs.orderPosition},
-	orderLength{rhs.orderLength},
-	flags{rhs.flags},
+	y{ rhs.y },
+	zlayer{ rhs.zlayer },
+	scale{ rhs.scale },
+	graphics{ rhs.graphics }, // should be ok?
+	order{ rhs.order },
+	orderPosition{ rhs.orderPosition },
+	orderLength{ rhs.orderLength },
+	flags{ rhs.flags },
+	isVisible{ true },
 	callbackID{},
 	callbackArg{this, animator.getCamera()}
 {
@@ -419,7 +403,6 @@ Sprite::Sprite(const Sprite& rhs) :
 
 Sprite& Sprite::operator=(Sprite rhs) {
 	swap(*this, rhs);
-
 	return *this;
 }
 
@@ -459,7 +442,6 @@ Uint32 Sprite::callback_render(Uint32 interval, void* sp) {
 	(args->spr->orderPosition)++;
 	if (args->spr->orderPosition >= args->spr->orderLength) args->spr->orderPosition = 0;
 	//printf("Callback from sprite %hi updated to order position %i of %i.\n", args->spr, args->spr->orderPosition, args->spr->orderLength - 1);
-	//args->spr->render(args->cam);
 	
 	return interval;
 }
@@ -493,6 +475,8 @@ void Sprite::getScaledWidthHeight(int* w, int* h) const {
 	*h *= scale;
 }
 
+void Sprite::setVisible(bool isVisible) { this->isVisible = isVisible; }
+
 
 
 /// <summary>
@@ -513,9 +497,6 @@ AnimationManager::AnimationManager(Uint32 msPerUpdate) {
 /// AnimationManager destructor. Deletes all Sprites it's responsible for as well as the camera.
 /// </summary>
 AnimationManager::~AnimationManager() {
-	//for (Sprite e : sprites) {
-	//	delete e;
-	//}
 	//SDL_RemoveTimer(callbackID);
 	delete camera;
 }
@@ -562,18 +543,14 @@ void AnimationManager::updateSprites() const {
 
 	// push everything by zorder
 	for (const Sprite* e : sprites) {
-		heap.push(e);
+		if (e->getVisible())
+			heap.push(e);
 	}
-	
-	//for (auto i{ sprites.begin() }; i != sprites.end(); ++i) {
-	//	Sprite e{ *i };
-	//	heap.push(e);
-	//}
 
 	// then render in zorder
 	while (!heap.empty()) {
 		heap.top()->render(camera);
-		printf("Rendered Sprite with zlayer %d...\n", heap.top()->getZlayer());
+		//printf("Rendered Sprite with zlayer %d...\n", heap.top()->getZlayer());
 		heap.pop();
 	}
 
@@ -595,18 +572,6 @@ void AnimationManager::removeSprite(const Sprite* sprite) {
 		return s == sprite;
 		});
 	return;
-	
-	/*int i = 0;
-	for (auto e : sprites) {
-		// check for reference equality -- if the addresses are the same, then we have a match
-		if (&e == &sprite) {
-			sprites.erase(sprites.begin() + i);
-			break;
-		}
-		++i;
-	}*/
-	//delete sprite;
-	// i guess now sprite isn't a valid reference??? idk, references are a little weird
 }
 
 /// <summary>

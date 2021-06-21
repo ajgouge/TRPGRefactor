@@ -68,12 +68,7 @@ int main(int argc, char* args[]) {
 
 			std::vector<Sprite> sprites;
 
-			printf("Assets loaded. Preparing to create Sprites...\n");
-			
-			//Sprite test{ assets.getAFrame("anti_air"), "idle" };
-
-			//printf("Sprite created with scale %lf.\n", test.getScale());
-			//printf("If you see this, the error is very strange...\n");
+			//printf("Assets loaded. Preparing to create Sprites...\n");
 			
 			sprites.emplace_back(assets.getAFrame("anti_air"), "idle");
 			sprites.emplace_back(assets.getAFrame("apc"),"idle");
@@ -136,10 +131,7 @@ int main(int argc, char* args[]) {
 			sprites[21].setY(192);
 			sprites[22].setY(192);
 
-			// zlayer test
-			sprites[1].setZlayer(10);
-
-			printf("All sprites set. Preparing Layer test...\n");
+			//printf("All sprites set. Preparing Layer test...\n");
 
 			// Layer test
 			Layer testLayer(assets, basePath + "assets\\testmap1.txt");
@@ -149,7 +141,6 @@ int main(int argc, char* args[]) {
 			camera->y = 0;
 			camera->w = SCREEN_WIDTH;
 			camera->h = SCREEN_HEIGHT;
-			//sprites[0]->render(camera);
 
 			int displayHeight = SCREEN_HEIGHT, displayWidth = SCREEN_WIDTH;
 
@@ -160,28 +151,9 @@ int main(int argc, char* args[]) {
 			// from the game loop and putting it somewhere else!
 			AnimationManager& animator{ Sprite::getAnimator() };
 
-			// quick testing block
-			//{
-			//	SDL_SetRenderDrawColor(renderer, 50, 20, 20, 255);
-			//	SDL_RenderClear(renderer);
-
-			//	printf("Preparing to update Sprites...\n");
-
-			//	// TODO: Ideally rendering should happen independently of game logic
-			//	// at some point. One step (though only *one* step!) is putting this
-			//	// into an SDL_Timer callback.
-			//	animator.updateSprites();
-			//	//test.render(camera);
-
-			//	printf("Done. Rendering backbuffer...\n");
-
-			//	GE_PushFromBackbuffer(renderer, resBuffer, displayHeight, displayWidth);
-
-			//	//SDL_Delay(1000);
-
-			//	testLayer.updateTile(2, 3, "grass0", "idle");
-
-			//}
+			// isVisible test
+			// sprites[3].setVisible(false);
+			// testLayer.setVisible(false);
 
 			while (true) {
 				// poll event
@@ -199,15 +171,14 @@ int main(int argc, char* args[]) {
 				SDL_SetRenderDrawColor(renderer, 50, 20, 20, 255);
 				SDL_RenderClear(renderer);
 
-				printf("Preparing to update Sprites...\n");
+				//printf("Preparing to update Sprites...\n");
 
 				// TODO: Ideally rendering should happen independently of game logic
 				// at some point. One step (though only *one* step!) is putting this
 				// into an SDL_Timer callback.
 				animator.updateSprites();
-				//test.render(camera);
 
-				printf("Done. Rendering backbuffer...\n");
+				//printf("Done. Rendering backbuffer...\n");
 
 				GE_PushFromBackbuffer(renderer, resBuffer, displayHeight, displayWidth);
 

@@ -35,10 +35,6 @@ Tile::Tile(const AFrame& graphic, std::string order, int x, int y, double size) 
 	size{ size }
 	{ updateInternal(); }
 
-Tile::~Tile() {
-	//animator = NULL;
-}
-
 void Tile::updatePos(int nx, int ny) {
 	x = nx;
 	y = ny;
@@ -57,6 +53,10 @@ void Tile::updateInternal() {
 	this->graphic.setXY(this->x * w, this->y * h);
 }
 
+void Tile::setVisible(bool isVisible) {
+	graphic.setVisible(isVisible);
+}
+
 
 
 Layer::Layer(AssetManager& assets, std::string mappath, double scale) :
@@ -67,16 +67,12 @@ Layer::Layer(AssetManager& assets, std::string mappath, double scale) :
 	zlayer{ },
 	mapName{ },
 	isInit{ false },
-	scale{ scale }
+	scale{ scale },
+	isVisible{ true }
 {
 	if (!loadMap(mappath)) {
 		printf("ERROR: Layer::loadMap returned error state.\n");
 	}
-}
-
-Layer::~Layer() {
-	//animator = NULL;
-	// TODO: probably destroy all the Tiles
 }
 
 bool Layer::loadMap(std::string mappath) {
@@ -143,13 +139,13 @@ bool Layer::loadMap(std::string mappath) {
 
 		std::string assetName = bufferstd.substr(0, colonIndex);
 		// debug
-		printf("assetName: %s\n", assetName.c_str());
+		//printf("assetName: %s\n", assetName.c_str());
 		
 		// +2 gets to the start of the string after the "::"
 		// we don't check for out of bounds here ( it should break anyway, but lazy :( )
 		std::string orderName = bufferstd.substr(colonIndex + 2);
 		// debug
-		printf("orderName: %s\n", orderName.c_str());
+		//printf("orderName: %s\n", orderName.c_str());
 
 		FrameOrder animFrame{assets.getAFrame(assetName), orderName};
 		palette.emplace(thisIndex, animFrame);
@@ -166,7 +162,6 @@ bool Layer::loadMap(std::string mappath) {
 			mapFile.getline(entryBuf, MAPR_TILE_SIZE, '\t');
 			FrameOrder thisFrame = palette.at(std::stoi(entryBuf));
 			// we now know enough to make our Tile for this position
-			//Tile k();
 			row.emplace_back(thisFrame.frame, thisFrame.order, j, i, scale);
 		}
 		// grab our last index and make the Tile
@@ -195,6 +190,17 @@ void Layer::setZLayer(int zlayer) {
 	for (auto& i : map) {
 		for (auto& j : i) {
 			j.updateZLayer(zlayer);
+		}
+	}
+}
+
+void Layer::setVisible(bool isVisible) {
+	if (this->isVisible != isVisible) {
+		this->isVisible = isVisible;
+		for (auto& i : map) {
+			for (auto& j : i) {
+				j.setVisible(isVisible);
+			}
 		}
 	}
 }

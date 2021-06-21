@@ -15,11 +15,12 @@ class Tile {
 	
 public:
 	Tile(const AFrame& graphic, std::string order, int x, int y, double size);
-	~Tile();
+	~Tile() = default;
 	void updatePos(int nx, int ny);
 	void updateScale(double nsize);
 	void updateZLayer(int zlayer) { graphic.setZlayer(zlayer); }
 	double getScale() const { return size; }
+	void setVisible(bool isVisible);
 
 private:
 	// bulk update the underlying Sprite
@@ -60,6 +61,7 @@ public:
 /// These objects only move relative to the camera so it's a good idea to separate their
 /// rendering from the AnimationManager (might save time in the rendering process). Perhaps
 /// inserting the whole layer as one "Sprite" with one zlayer could speed things up a bit.
+/// It's premature optimization if we do it now, but still something to keep in mind.
 /// 
 /// TODO: (one more ok?) the constructor requires a mappath right now and then loads a
 /// map file every time. you can't make a Layer without a map file, so you can't really
@@ -70,9 +72,8 @@ class Layer {
 
 public:
 	Layer(AssetManager& assets, std::string mappath, double scale = 1);
-	//Layer(AssetManager& assets, std::string mappath, double scale = 1) : Layer(assets, mappath, 0, scale) {}
-	~Layer();
-	//void setVisible(bool isVisible);
+	~Layer() = default;
+	void setVisible(bool isVisible);
 	void updateTile(int x, int y, std::string asset, std::string order);
 	void setZLayer(int zlayer);
 
@@ -86,6 +87,7 @@ private:
 	std::string mapName;
 	bool isInit;
 	double scale; // how much to resize each Tile AFrame by. 1 is default
+	bool isVisible;
 
 };
 
