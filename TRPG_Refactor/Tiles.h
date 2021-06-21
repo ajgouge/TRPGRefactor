@@ -18,6 +18,7 @@ public:
 	~Tile();
 	void updatePos(int nx, int ny);
 	void updateScale(double nsize);
+	void updateZLayer(int zlayer) { graphic.setZlayer(zlayer); }
 	double getScale() const { return size; }
 
 private:
@@ -69,10 +70,11 @@ class Layer {
 
 public:
 	Layer(AssetManager& assets, std::string mappath, double scale = 1);
+	//Layer(AssetManager& assets, std::string mappath, double scale = 1) : Layer(assets, mappath, 0, scale) {}
 	~Layer();
 	//void setVisible(bool isVisible);
 	void updateTile(int x, int y, std::string asset, std::string order);
-	//void setZLayer(int zlayer);
+	void setZLayer(int zlayer);
 
 private:
 	bool loadMap(std::string mappath);

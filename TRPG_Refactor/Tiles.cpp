@@ -177,14 +177,24 @@ bool Layer::loadMap(std::string mappath) {
 		// this row is complete; push it to the complete map and continue
 		map.push_back(row);
 	}
-
+	
+	setZLayer(this->zlayer);
+	
 	// if we made it here, we successfully init-ed
 	isInit = true;
 	return true;
-
 }
 
 void Layer::updateTile(int x, int y, std::string asset, std::string order) {
 	Tile t{ assets.getAFrame(asset), order, x, y, map[y][x].getScale() };
 	map[y][x] = t;
+}
+
+void Layer::setZLayer(int zlayer) {
+	this->zlayer = zlayer;
+	for (auto& i : map) {
+		for (auto& j : i) {
+			j.updateZLayer(zlayer);
+		}
+	}
 }

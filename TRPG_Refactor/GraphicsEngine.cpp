@@ -554,7 +554,7 @@ void AnimationManager::updateSprites() const {
 	auto compare = [](const Sprite* left, const Sprite* right) {
 		// false if left >= right, otherwise true
 		// (that has to be not >=, since comp(a,a) must be false)
-		return !(left->getZlayer() >= right->getZlayer());
+		return left->getZlayer() > right->getZlayer();
 	};
 	// we use a list internally here; TODO: make sure this doesn't break
 	// anything b/c copy assignment or smth
@@ -573,6 +573,7 @@ void AnimationManager::updateSprites() const {
 	// then render in zorder
 	while (!heap.empty()) {
 		heap.top()->render(camera);
+		printf("Rendered Sprite with zlayer %d...\n", heap.top()->getZlayer());
 		heap.pop();
 	}
 
