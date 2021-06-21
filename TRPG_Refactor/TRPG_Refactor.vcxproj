@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{adf044fb-4104-483f-86d0-d24461485706}</ProjectGuid>
+    <RootNamespace>TRPGRefactor</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)\libs\SDL2_image-2.0.5\include;$(ProjectDir)\libs\SDL2_ttf-2.0.15\include;$(ProjectDir)\libs\SDL2_mixer-2.0.4\include;$(ProjectDir)\libs\SDL2-2.0.12\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\libs\SDL2_image-2.0.5\lib\x64;$(ProjectDir)\libs\SDL2_mixer-2.0.4\lib\x64;$(ProjectDir)\libs\SDL2_ttf-2.0.15\lib\x64;$(ProjectDir)\libs\SDL2-2.0.12\lib\x64;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Init.cpp" />
+    <ClCompile Include="GraphicsEngine.cpp" />
+    <ClCompile Include="Tiles.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GraphicsEngine.h" />
+    <ClInclude Include="Tiles.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\anti_air\anti_air_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\anti_air\anti_air_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\anti_air\anti_air_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\anti_air\anti_air_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\apc\apc_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\apc\apc_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\apc\apc_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\apc\apc_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\artillery\artillery_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\artillery\artillery_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\artillery\artillery_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\artillery\artillery_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\battleship\battleship_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\battleship\battleship_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\battleship\battleship_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\battleship\battleship_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\battle_copter\battle_copter_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\battle_copter\battle_copter_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\battle_copter\battle_copter_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\battle_copter\battle_copter_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\bomber\bomber_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\bomber\bomber_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\bomber\bomber_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\bomber\bomber_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\carrier\carrier_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\carrier\carrier_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\carrier\carrier_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\carrier\carrier_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\cruiser\cruiser_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\cruiser\cruiser_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\cruiser\cruiser_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\cruiser\cruiser_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\fighter\fighter_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\fighter\fighter_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\fighter\fighter_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\fighter\fighter_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\grass0\grass0_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\grass0\grass0_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\heavy_tank\heavy_tank_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\heavy_tank\heavy_tank_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\heavy_tank\heavy_tank_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\heavy_tank\heavy_tank_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hidden_stealth_fighter\hidden_stealth_fighter_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hidden_stealth_fighter\hidden_stealth_fighter_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hidden_stealth_fighter\hidden_stealth_fighter_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hidden_stealth_fighter\hidden_stealth_fighter_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\1-2 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\1-2 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\11-12 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\11-12 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\13-14 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\13-14 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\15-16 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\15-16 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\17-18 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\17-18 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\19-20 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\19-20 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\3-4 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\3-4 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\5-6 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\5-6 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\7-8 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\7-8 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\9-10 hp blue.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\hp\9-10 hp red.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\infantry\infantry_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\infantry\infantry_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\infantry\infantry_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\infantry\infantry_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\lander\lander_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\lander\lander_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\lander\lander_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\lander\lander_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\light_tank\light_tank_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\light_tank\light_tank_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\light_tank\light_tank_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\light_tank\light_tank_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\mech\mech_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\mech\mech_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\mech\mech_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\mech\mech_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\medium_tank\medium_tank_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\medium_tank\medium_tank_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\medium_tank\medium_tank_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\medium_tank\medium_tank_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\missile\missile_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\missile\missile_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\missile\missile_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\missile\missile_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\recon\recon_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\recon\recon_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\recon\recon_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\recon\recon_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\rocket\rocket_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\rocket\rocket_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\rocket\rocket_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\rocket\rocket_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\stealth_fighter\stealth_fighter_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\stealth_fighter\stealth_fighter_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\stealth_fighter\stealth_fighter_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\stealth_fighter\stealth_fighter_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\submarine\submarine_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\submarine\submarine_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\submarine\submarine_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\submarine\submarine_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\submerged_submarine\submerged_submarine_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\submerged_submarine\submerged_submarine_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\submerged_submarine\submerged_submarine_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\submerged_submarine\submerged_submarine_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\transport_copter\transport_copter_0.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\transport_copter\transport_copter_1.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\transport_copter\transport_copter_2.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="assets\transport_copter\transport_copter_3.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="assets\objects.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="assets\testmap1.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

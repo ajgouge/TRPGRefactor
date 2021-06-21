@@ -1,0 +1,95 @@
+anti_air(0.25): {
+	idle(250) = [0,1]
+}
+
+apc(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+artillery(0.25): {
+	idle(250) = [0,1,2,1]
+}
+
+battle_copter(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+battleship(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+bomber(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+carrier(0.25): {
+	idle(250) = [0,0,0,3]
+}
+
+cruiser(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+fighter(0.25): {
+	idle(250) = [0,1,0,3]
+}
+
+heavy_tank(0.25): {
+	idle(250) = [0,1,2,1]
+}
+
+hidden_stealth_fighter(0.25): {
+	idle(250) = [0,1,0,3]
+}
+
+infantry(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+lander(0.25): {
+	idle(250) = [0,0,0,3]
+}
+
+light_tank(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+mech(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+medium_tank(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+missile(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+recon(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+rocket(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+stealth_fighter(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+submarine(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+submerged_submarine(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+transport_copter(0.25): {
+	idle(250) = [0,1,2,3]
+}
+
+grass0(1.0): {
+	idle(200) = [0,0,1,1,1]
+}
